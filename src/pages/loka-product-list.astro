@@ -1,0 +1,29 @@
+---
+import Base from '../layouts/Base.astro';
+import PdfFlipbook from '../components/PdfFlipbook.astro';
+---
+
+<Base
+  title="Loka Product list Japanese Food Products Distributor in Cambodia | LOKA"
+  description="Our strength is that we handle products in a variety of temperature zones: frozen, chilled, and refrigerated."
+>
+  <div class="product-list">
+    <PdfFlipbook
+      src="/uploads/2025/09/Loka_Japanese_Foods_Beverage_price_list_2025_update_August_compressed.pdf"
+      title="loka-product-list"
+    />
+  </div>
+</Base>
+
+<style>
+  /* 51px spacer row + 10px container padding, as on the original page */
+  .product-list {
+    padding: 61px 10px 10px;
+  }
+
+  @media (max-width: 767px) {
+    .product-list {
+      padding-top: 10px;
+    }
+  }
+</style>

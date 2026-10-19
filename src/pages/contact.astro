@@ -1,0 +1,208 @@
+---
+import Base from '../layouts/Base.astro';
+import { LINKS } from '../data/site';
+---
+
+<Base
+  title="Contact LOKA Japanese Foods & Beverage - Get in Touch Today!"
+  description="Contact LOKA Japanese Foods & Beverage for product inquiries. Fill out our form, and a representative will respond shortly!"
+  fonts="family=DM+Sans:wght@400;500&family=Noto+Sans+Khmer:wght@400;500"
+>
+  <div class="loka-contact-page">
+    <section class="lk-hero">
+      <div class="lk-hero-bg"></div>
+      <div class="lk-hero-in">
+        <h1>Contact Us</h1>
+        <span class="lk-hero-line"></span>
+      </div>
+    </section>
+
+    <section class="lk-contact">
+      <div class="lk-wrap">
+        <h2>Do you want to become one of our suppliers or clients?</h2>
+        <p>
+          Thank you for your interest in LOKA Japanese Foods&amp;Beverage.<br />{' '}Please feel free to contact us via Facebook Messenger or email.
+        </p>
+        <a class="lk-mail" href={`mailto:${LINKS.email}`}>{LINKS.email}</a>
+        <a class="lk-btn" href={LINKS.facebook} target="_blank" rel="noopener">LOKA’s Facebook Page</a>
+      </div>
+    </section>
+  </div>
+</Base>
+
+<style>
+  .loka-contact-page {
+    --lk-indigo: #2b2f9b;
+    --lk-indigo-dark: #1f2380;
+    font-family: 'DM Sans', 'Noto Sans Khmer', Arial, sans-serif;
+    color: var(--lk-indigo);
+    background: #fff;
+    line-height: 1.6;
+    overflow: hidden;
+    text-align: center;
+  }
+
+  .loka-contact-page p {
+    margin: 0;
+  }
+
+  .loka-contact-page h1,
+  .loka-contact-page h2 {
+    font-family: inherit;
+    line-height: 1.35;
+  }
+
+  .lk-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Hero */
+  .lk-hero {
+    position: relative;
+    height: clamp(260px, 30vw, 440px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    background: #2b2f9b;
+  }
+
+  .lk-hero-bg {
+    position: absolute;
+    inset: 0;
+    background: url('/opt/2025/10/IMG_9754-2-1-2048x1150.webp') center 30% / cover no-repeat;
+    transform: scale(1.08);
+    animation: lkZoom 1.6s ease-out forwards;
+  }
+
+  .lk-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background:
+      radial-gradient(ellipse at center, rgba(20, 24, 90, 0.35) 0%, rgba(20, 24, 90, 0.6) 70%),
+      linear-gradient(180deg, rgba(15, 20, 70, 0.15) 0%, rgba(15, 20, 70, 0.55) 100%);
+  }
+
+  .lk-hero-in {
+    position: relative;
+    z-index: 2;
+    padding: 0 16px;
+    animation: lkRise 0.9s 0.2s ease-out both;
+  }
+
+  .lk-hero h1 {
+    color: #fff;
+    font-size: clamp(32px, 4vw, 56px);
+    font-weight: 500;
+    text-shadow: 0 2px 16px rgba(0, 0, 0, 0.45);
+  }
+
+  .lk-hero-line {
+    display: block;
+    width: 56px;
+    height: 3px;
+    margin: 16px auto 0;
+    background: #fff;
+    border-radius: 2px;
+    opacity: 0.9;
+  }
+
+  @keyframes lkZoom {
+    to {
+      transform: scale(1);
+    }
+  }
+
+  @keyframes lkRise {
+    from {
+      opacity: 0;
+      transform: translateY(14px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .lk-hero-bg,
+    .lk-hero-in {
+      animation: none;
+      transform: none;
+    }
+  }
+
+  /* Contact */
+  .lk-contact {
+    padding: clamp(36px, 4vw, 56px) 0 clamp(48px, 5vw, 72px);
+  }
+
+  .lk-contact h2 {
+    font-size: clamp(22px, 2.5vw, 32px);
+    font-weight: 400;
+    color: var(--lk-indigo);
+    margin: 0 0 clamp(24px, 3vw, 40px);
+  }
+
+  .lk-contact p {
+    font-size: clamp(16px, 1.75vw, 22px);
+    line-height: 1.65;
+    color: var(--lk-indigo);
+  }
+
+  .lk-mail {
+    display: inline-block;
+    margin: clamp(24px, 3vw, 40px) 0 clamp(28px, 3.5vw, 44px);
+    font-size: clamp(17px, 1.9vw, 24px);
+    color: var(--lk-indigo);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+    word-break: break-all;
+  }
+
+  .lk-mail:hover {
+    color: var(--lk-indigo-dark);
+  }
+
+  .lk-btn {
+    display: block;
+    width: fit-content;
+    margin: 0 auto;
+    padding: clamp(16px, 1.8vw, 24px) clamp(24px, 2.4vw, 32px);
+    background: var(--lk-indigo);
+    color: #fff;
+    font-size: clamp(17px, 1.9vw, 24px);
+    font-weight: 400;
+    border-radius: 3px;
+    transition: background 0.2s, transform 0.2s;
+  }
+
+  .lk-btn:hover,
+  .lk-btn:focus-visible {
+    background: var(--lk-indigo-dark);
+    color: #fff;
+    transform: translateY(-2px);
+  }
+
+  @media (max-width: 640px) {
+    .lk-wrap {
+      padding: 0 16px;
+    }
+
+    .lk-hero {
+      height: 230px;
+    }
+
+    .lk-hero-bg {
+      background-image: url('/opt/2025/10/IMG_9754-2-1-scaled-800.webp');
+    }
+
+    .lk-contact p br {
+      display: none;
+    }
+  }
+</style>

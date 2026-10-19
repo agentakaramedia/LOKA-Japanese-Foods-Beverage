@@ -1,0 +1,172 @@
+/*
+ * Base styles reproducing the original WordPress (Woodmart + Elementor) theme defaults.
+ * Note: the original site declares "Poppins"/"Roboto" on most Elementor widgets but never
+ * loads those fonts, so browsers render the generic sans-serif fallback. We declare that
+ * fallback directly to keep the rendering identical. Pages whose custom blocks did load
+ * web fonts (home, about, contact) include them explicitly.
+ */
+:root {
+  --loka-header-bg: #2d309c;
+  --loka-navy: #1d218a;
+  --loka-navy-2: #1d2088;
+  --loka-red: #dc0021;
+  --loka-text: #767676;
+  --loka-font: sans-serif;
+  --container: 1222px;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+html,
+body {
+  overflow-x: clip;
+}
+
+body {
+  margin: 0;
+  background: #fff;
+  color: var(--loka-text);
+  font-family: var(--loka-font);
+  font-size: 14px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0;
+  font-family: var(--loka-font);
+}
+
+p {
+  margin: 0 0 20px;
+}
+
+p:last-child {
+  margin-bottom: 0;
+}
+
+img,
+video,
+iframe {
+  max-width: 100%;
+}
+
+img {
+  height: auto;
+  border: 0;
+  vertical-align: middle;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+  transition: color 0.25s ease;
+}
+
+button {
+  font: inherit;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+/* Woodmart's page wrapper leaves 40px below the last content block */
+main {
+  display: block;
+  padding-bottom: 40px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 8px;
+  top: -60px;
+  z-index: 1000;
+  padding: 10px 16px;
+  background: #fff;
+  color: var(--loka-navy);
+  font-weight: 700;
+}
+
+.skip-link:focus {
+  top: 8px;
+}
+
+/* Boxed content area used by Elementor containers: 1440px viewport -> 200px side padding */
+.e-boxed {
+  padding-inline: 200px;
+}
+
+@media (max-width: 767px) {
+  .e-boxed {
+    padding-inline: 30px;
+  }
+}
+
+/* Elementor "divider" widget used as a hero underline */
+.e-divider {
+  display: block;
+  width: 100%;
+  padding: 15px 100px;
+}
+
+.e-divider::before {
+  content: "";
+  display: block;
+  border-top: 5px solid currentColor;
+}
+
+@media (max-width: 767px) {
+  .e-divider {
+    padding-inline: 40px;
+  }
+}
+
+/* Elementor "button" widget defaults */
+.e-button {
+  display: inline-block;
+  padding: 12px 24px;
+  border-radius: 3px;
+  font-family: var(--loka-font);
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1;
+  color: #fff;
+  text-align: center;
+  transition: all 0.3s;
+}
+
+.e-button:hover,
+.e-button:focus-visible {
+  color: #fff;
+  filter: brightness(1.12);
+}

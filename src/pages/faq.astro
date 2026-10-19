@@ -1,0 +1,145 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+
+const faqs = [
+  {
+    question: 'How to keep Quality Control?',
+    answer: `<h4><strong>Deploying a Freezing Stocker in Our Warehouse</strong></h4><p>Most of our products are stored in stock units (12 units per batch) in our warehouse. <strong>To ensure quick deliveries,</strong> we have a system that allows us to dispatch ordered products efficiently.</p><h4><strong>Ultra-Low Temperature Freezer (-60°C) for Tuna Storage</strong></h4><p>We have introduced an <strong>ultra-low temperature freezer (-60°C)</strong> in Cambodia. <strong>This system</strong> allows for stable storage of frozen tuna, including <strong>bluefin tuna and yellowfin tuna</strong>, preventing discoloration and preserving freshness.</p><h4><strong>Vacuum Packing Machine for Better Preservation</strong></h4><p>To maintain product quality, we have <strong>introduced a vacuum packing machine.</strong> If packaging is damaged during importation or inventory maintenance, we repackage it carefully. <strong>This prevents freezing burns</strong> and ensures the products remain fresh.</p><h4><strong>Introducing Ice Battery® for Temperature Control</strong></h4><p>Maintaining a <strong>cold chain in Cambodia’s tropical climate</strong> is a challenge. <strong>With the introduction of Ice Battery® from IIT,</strong> we can keep delivery temperatures stable, even when Phnom Penh reaches 40°C. This system <strong>helps maintain product quality</strong> at around <strong>-15°C</strong>, ensuring freshness upon arrival.</p>`,
+  },
+  {
+    question: 'How to Get the Products from LOKA?',
+    answer: `<p><strong>Business Negotiations:</strong> If you are interested in our services and products and have or plan to open a store in Cambodia, please get in touch with us. Our sales staff (Japanese or Khmer) will meet with you to discuss the details.</p><p><strong>Order:</strong> You can order by e-mail, phone, SMS (LINE), and other SNS. Please get in touch with us at least one day before the desired delivery date.</p><p><strong>Delivery:</strong> Our delivery staff will deliver your order to the store of your choice the day after your order is placed. Usually, we ship the morning after the order date. Orders placed in the morning of the same day will be shipped in the afternoon of the same day if requested. If you order an item outside our inventory, we will contact you separately to inform you of the shipping schedule (please check with our sales staff for details).</p><p><strong>Payment method:</strong> For new orders, we ask that payment be made by cash on delivery (COD) upon receipt of the first month’s order. For continuing transactions, you can choose between COD or monthly lump-sum payment (the last day of the month and the 10th of the following month) from the second month onward.</p>`,
+  },
+];
+---
+
+<Base
+  title="Contact LOKA Japanese Foods & Beverage - Get in Touch Today!"
+  description="Contact LOKA Japanese Foods & Beverage for product inquiries. Fill out our form, and a representative will respond shortly!"
+>
+  <Hero image="/uploads/2025/10/IMG_9754-2-1-2048x1150.jpg" mobileImage="/uploads/2025/05/media-resource-1.jpg" title="FAQ" />
+
+  <section class="faq">
+    <h2 class="faq__title">Frequently Asked Questions</h2>
+    <div class="faq__list">
+      {faqs.map((f) => (
+        <details class="faq__item" name="faq">
+          <summary class="faq__q">
+            <Icon name="arrow-circle-right" class="faq__icon faq__icon--closed" />
+            <Icon name="arrow-circle-down" class="faq__icon faq__icon--open" />
+            <span>{f.question}</span>
+          </summary>
+          <div class="faq__a" set:html={f.answer} />
+        </details>
+      ))}
+    </div>
+    <div class="faq__spacer" aria-hidden="true"></div>
+  </section>
+</Base>
+
+<script>
+  // Exclusive accordion fallback for browsers without <details name> support
+  const items = document.querySelectorAll<HTMLDetailsElement>('.faq__item');
+  items.forEach((item) =>
+    item.addEventListener('toggle', () => {
+      if (item.open) items.forEach((other) => other !== item && (other.open = false));
+    }),
+  );
+</script>
+
+<style>
+  .faq {
+    background: var(--loka-navy);
+  }
+
+  .faq__title {
+    padding: 40px 210px 10px;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+  }
+
+  .faq__list {
+    padding: 0 200px;
+  }
+
+  .faq__q {
+    display: flex;
+    align-items: center;
+    min-height: 51px;
+    padding: 15px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.02);
+    background: var(--loka-navy);
+    font-size: 16px;
+    font-weight: 600;
+    line-height: 1;
+    color: #fff;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .faq__q::-webkit-details-marker {
+    display: none;
+  }
+
+  .faq__q span {
+    margin-left: 20px;
+  }
+
+  .faq__q :global(.faq__icon) {
+    width: 16px;
+    height: 16px;
+    flex: 0 0 16px;
+  }
+
+  .faq__item:not([open]) .faq__q :global(.faq__icon--open),
+  .faq__item[open] .faq__q :global(.faq__icon--closed) {
+    display: none;
+  }
+
+  .faq__a {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    background: #fff;
+    font-size: 16px;
+    line-height: 1.7;
+    color: #333;
+  }
+
+  .faq__a :global(h4) {
+    margin: 0 0 20px;
+    font-size: 18px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #242424;
+  }
+
+  .faq__a :global(strong) {
+    font-weight: 600;
+    color: #242424;
+  }
+
+  .faq__spacer {
+    height: 102px;
+  }
+
+  @media (max-width: 1024px) {
+    .faq__title {
+      padding: 10px 40px;
+    }
+
+    .faq__list {
+      padding: 0 30px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .faq__title {
+      padding: 30px 30px;
+    }
+  }
+</style>

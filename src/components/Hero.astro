@@ -1,0 +1,99 @@
+---
+/**
+ * Full-width banner reproducing the original Elementor hero containers:
+ * background photo + black overlay, centred 60px/900 title and a 5px white divider.
+ */
+import { opt } from '../lib/img';
+
+interface Props {
+  image: string;
+  /** Image used at <=767px (the original swaps to a different photo on mobile). */
+  mobileImage?: string;
+  title?: string;
+  /** Overlay opacity of the black layer (original values: 0.4 or 0.6). */
+  overlay?: number;
+  /** Desktop background-size; the original keeps the photo at natural size above 767px. */
+  size?: 'auto' | 'cover';
+  divider?: boolean;
+  class?: string;
+}
+
+const {
+  image,
+  mobileImage = image,
+  title,
+  overlay = 0.4,
+  size = 'auto',
+  divider = true,
+  class: className,
+} = Astro.props;
+---
+
+<!-- The banner photo is the largest paint on most pages: fetch it before CSS is applied -->
+<link rel="preload" as="image" href={opt(image)} media="(min-width: 768px)" fetchpriority="high" />
+<link rel="preload" as="image" href={opt(mobileImage, true)} media="(max-width: 767px)" fetchpriority="high" />
+<section
+  class:list={['hero', className]}
+  style={`--hero-image:url('${opt(image)}');--hero-image-m:url('${opt(mobileImage, true)}');--hero-overlay:${overlay};--hero-size:${size}`}
+>
+  <slot name="before" />
+  {title && <h1 class="hero__title" set:html={title} />}
+  <slot />
+  {divider && <span class="hero__divider e-divider" aria-hidden="true"></span>}
+  <slot name="after" />
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    min-height: 600px;
+    padding: 10px;
+    color: #fff;
+    text-align: center;
+    background: var(--hero-image) center / var(--hero-size) no-repeat;
+    isolation: isolate;
+  }
+
+  .hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: #000;
+    opacity: var(--hero-overlay);
+  }
+
+  .hero > :global(*) {
+    max-width: 100%;
+  }
+
+  .hero__title {
+    font-size: 60px;
+    font-weight: 900;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .hero__divider {
+    align-self: stretch;
+    color: #fff;
+  }
+
+  @media (max-width: 767px) {
+    .hero {
+      min-height: 150px;
+      gap: 0;
+      background-image: var(--hero-image-m);
+      background-size: cover;
+    }
+
+    .hero__title {
+      font-size: 30px;
+    }
+  }
+</style>

@@ -1,0 +1,15 @@
+---
+import { ICONS } from '../data/icons';
+
+interface Props {
+  name: keyof typeof ICONS;
+  class?: string;
+}
+
+const { name, class: className } = Astro.props;
+const icon = ICONS[name];
+---
+
+<svg class={className} viewBox={icon.viewBox} aria-hidden="true" focusable="false" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+  <path d={icon.d} />
+</svg>

@@ -1,0 +1,99 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+import { posts, formatPublished } from '../data/posts';
+---
+
+<Base
+  title="LOKA News & Events | Japanese Food Distributor in Cambodia"
+  description="Stay updated with LOKA's latest news and events . Discover how we bring authentic Japanese flavors to Cambodia."
+  ogImage="/uploads/2025/07/Koh-Pich-Exhibition.jpg"
+>
+  <Hero image="/uploads/2025/05/banner-camfoods.jpg" title="News &amp; Events" overlay={0.6} />
+
+  <div class="spacer" aria-hidden="true"></div>
+
+  <section class="post-list" aria-label="News and events">
+    <ul class="post-list__grid">
+      {posts.map((post) => (
+        <li class="post-list__item">
+          <h2 class="post-list__title"><a href={`/${post.slug}/`}>{post.title}</a></h2>
+          <div class="post-list__meta">
+            <Icon name="calendar-alt-regular" class="post-list__icon" />
+            <time datetime={post.published}>{formatPublished(post.published)}</time>
+          </div>
+        </li>
+      ))}
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .spacer {
+    height: 45px;
+  }
+
+  .post-list {
+    padding: 0 200px;
+  }
+
+  .post-list__grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 1px solid #eee;
+    border-left: 1px solid #eee;
+  }
+
+  .post-list__item {
+    min-height: 128px;
+    padding: 10px 25px 25px 30px;
+    border-right: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+  }
+
+  .post-list__title {
+    margin: 0 0 15px;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #222;
+  }
+
+  .post-list__title a:hover,
+  .post-list__title a:focus-visible {
+    color: #e65a50;
+  }
+
+  .post-list__meta {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin: 5px 0;
+    font-size: 12px;
+    line-height: 1;
+    /* original #aaa darkened to meet WCAG AA contrast */
+    color: #767676;
+  }
+
+  .post-list__meta :global(.post-list__icon) {
+    width: 10.5px;
+    height: 12px;
+  }
+
+  @media (max-width: 1024px) {
+    .post-list {
+      padding: 0 30px;
+    }
+
+    .post-list__grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .post-list {
+      padding: 0;
+    }
+  }
+</style>

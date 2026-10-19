@@ -1,0 +1,61 @@
+---
+import Header from '../components/Header.astro';
+import { SITE_NAME } from '../data/site';
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+  /** Root-relative or absolute image used for Open Graph previews. */
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+  /** Google Fonts css2 query (family=...) for pages whose original blocks loaded web fonts. */
+  fonts?: string;
+}
+
+const { title, description, ogImage, ogType = 'website', fonts } = Astro.props;
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const image = ogImage ? new URL(ogImage, Astro.site).href : undefined;
+// The original WordPress site is configured with "noindex, nofollow". Keep that behaviour
+// unless PUBLIC_ALLOW_INDEXING=true is set at build time.
+const allowIndexing = import.meta.env.PUBLIC_ALLOW_INDEXING === 'true';
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    {description && <meta name="description" content={description} />}
+    <meta name="robots" content={allowIndexing ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'} />
+    <link rel="canonical" href={canonical} />
+    <link rel="alternate" hreflang="ja" href={`https://lokajapanesefoodsbeverage.com/ja${Astro.url.pathname}`} />
+    <meta property="og:locale" content="en_US" />
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    {description && <meta property="og:description" content={description} />}
+    <meta property="og:url" content={canonical} />
+    <meta property="og:site_name" content={SITE_NAME} />
+    {image && <meta property="og:image" content={image} />}
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="icon" href="/uploads/2025/05/cropped-loka-logo-10-32x32.png" sizes="32x32" />
+    <link rel="icon" href="/uploads/2025/05/cropped-loka-logo-10-192x192.png" sizes="192x192" />
+    <link rel="apple-touch-icon" href="/uploads/2025/05/cropped-loka-logo-10-180x180.png" />
+    {fonts && (
+      <>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link rel="stylesheet" href={`https://fonts.googleapis.com/css2?${fonts}&display=swap`} />
+      </>
+    )}
+    <slot name="head" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+  </body>
+</html>

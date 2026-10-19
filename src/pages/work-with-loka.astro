@@ -1,0 +1,136 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+
+// The original "Register" buttons pointed to "#"; they now lead to the contact page,
+// which is where supplier and client enquiries are handled.
+const cards = [
+  {
+    title: 'Suppliers',
+    text: 'Please create a profile on the following page and provide us with your information. A representative will then contact you.',
+    cta: 'Register as a LOKA Supplier',
+    light: true,
+  },
+  {
+    title: 'Clients',
+    text: 'LOKA serves a wide variety of clients. Please tell us about your business, and a representative will contact you. A representative will then contact you.',
+    cta: 'Register as a LOKA Client',
+  },
+];
+---
+
+<Base
+  title="Partner with LOKA | Japanese Food Distribution in Cambodia"
+  description="Partner with LOKA to distribute Japanese food and beverages across Cambodia. Benefit from our extensive network and logistics expertise."
+>
+  <Hero image="/uploads/2025/05/register.jpg" title="Get Started" overlay={0.6} size="cover" class="work-hero" />
+
+  <div class="band" aria-hidden="true"></div>
+
+  <section class="cards">
+    {cards.map((c) => (
+      <div class="card">
+        <h2 class="card__title">{c.title}</h2>
+        <p class:list={['card__text', { 'card__text--light': c.light }]}>{c.text}</p>
+        <a class="e-button card__btn" href="/contact/">
+          <Icon name="arrow-alt-circle-right" class="card__icon" />
+          <span>{c.cta}</span>
+        </a>
+      </div>
+    ))}
+  </section>
+
+  <div class="band" aria-hidden="true"></div>
+  <div class="tail" aria-hidden="true"></div>
+</Base>
+
+<style>
+  :global(main .hero.work-hero) {
+    justify-content: flex-start;
+    padding: 300px 0 0;
+  }
+
+  .band {
+    height: 51px;
+    background: var(--loka-navy-2);
+  }
+
+  .tail {
+    height: 20px;
+  }
+
+  .cards {
+    display: flex;
+    gap: 20px;
+    padding: 0 200px;
+    background: var(--loka-navy);
+  }
+
+  .card {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 50%;
+    padding: 10px;
+    border-radius: 10px;
+    background: #fff;
+  }
+
+  .card__title {
+    font-size: 30px;
+    font-weight: 900;
+    line-height: 1;
+    color: #000;
+    text-align: center;
+  }
+
+  .card__text {
+    margin: 0;
+    color: #000;
+  }
+
+  .card__text--light {
+    font-weight: 300;
+  }
+
+  .card__btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 10px;
+    background: var(--loka-navy);
+  }
+
+  .card__btn :global(.card__icon) {
+    width: 15px;
+    height: 15px;
+  }
+
+  @media (max-width: 1024px) {
+    .cards {
+      padding: 0 30px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    :global(main .hero.work-hero) {
+      min-height: 650px;
+    }
+
+    :global(main .hero.work-hero .hero__title) {
+      padding: 0 30px;
+      font-size: 40px;
+    }
+
+    .cards {
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    .card {
+      width: 100%;
+    }
+  }
+</style>

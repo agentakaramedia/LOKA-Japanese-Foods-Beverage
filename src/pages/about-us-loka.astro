@@ -1,0 +1,217 @@
+---
+import { opt } from '../lib/img';
+import Base from '../layouts/Base.astro';
+import sections from '../data/about.json';
+---
+
+<Base
+  title="About Us /The word “LOKA” is a Khmer word meaning “the world,”"
+  description="LOKA Japanese FOODBEVERAGE, are a food import and wholesale business that started operations in April 2014.With over 500 customers and..."
+  ogImage="/uploads/2025/05/loka-logo-background.png"
+  fonts="family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Khmer:wght@400;500"
+>
+  <div class="loka-about-page">
+    <section class="lk-hero">
+      <div class="lk-wrap">
+        <h1>Know More About LOKA Japanese Foods &amp; Beverage</h1>
+      </div>
+    </section>
+
+    {sections.map((s) => (
+      <section class:list={['lk-sec', { 'lk-blue': s.blue }]}>
+        <div class="lk-wrap">
+          <h2 set:html={s.title} />
+          <p set:html={s.text} />
+          <div class="lk-gallery">
+            {s.images.map((img) => (
+              <figure><img src={opt(img.src, true)} alt={img.alt} loading="lazy" decoding="async" /></figure>
+            ))}
+          </div>
+        </div>
+      </section>
+    ))}
+
+    <div class="lk-foot">
+      <div class="lk-wrap">
+        <img src="/images/brand/seats-inc.png" width="1701" height="412" alt="S.E.A.T.S Inc. - South East Asia Trading and Service" loading="lazy" />
+      </div>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .loka-about-page {
+    --lk-navy: #1b3a9a;
+    --lk-text: #2c3e94;
+    font-family: 'Poppins', 'Noto Sans Khmer', Arial, sans-serif;
+    color: var(--lk-text);
+    background: #fff;
+    line-height: 1.6;
+    overflow: hidden;
+    text-align: left;
+  }
+
+  /* The original block is pulled 15px under the header on desktop, and sits below a
+     61px white spacer on tablet/mobile. */
+  @media (min-width: 1025px) {
+    .loka-about-page {
+      margin-top: -15px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .loka-about-page {
+      padding-top: 61px;
+    }
+  }
+
+  .loka-about-page img {
+    max-width: 100%;
+    display: block;
+  }
+
+  .loka-about-page p {
+    margin: 0;
+  }
+
+  .loka-about-page h1,
+  .loka-about-page h2 {
+    font-family: inherit;
+    line-height: 1.35;
+  }
+
+  .lk-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Hero */
+  .lk-hero {
+    position: relative;
+    height: clamp(240px, 32vw, 460px);
+    display: flex;
+    align-items: center;
+    background: #1b3a9a url('/opt/2025/10/IMG_9754-2-1-2048x1150.webp') center 30% / cover no-repeat;
+  }
+
+  .lk-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, rgba(15, 30, 90, 0.55) 0%, rgba(15, 30, 90, 0.25) 55%, rgba(15, 30, 90, 0.05) 100%);
+  }
+
+  .lk-hero .lk-wrap {
+    position: relative;
+    width: 100%;
+  }
+
+  .lk-hero h1 {
+    color: #fff;
+    font-size: clamp(24px, 3vw, 38px);
+    font-weight: 500;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+  }
+
+  /* Content sections */
+  .lk-sec {
+    padding: 48px 0 52px;
+    background: #fff;
+  }
+
+  .lk-sec.lk-blue {
+    background: var(--lk-navy);
+    color: #fff;
+  }
+
+  .lk-sec h2 {
+    font-size: 26px;
+    font-weight: 500;
+    color: var(--lk-text);
+    margin: 0 0 14px;
+  }
+
+  .lk-sec.lk-blue h2 {
+    color: #fff;
+  }
+
+  .lk-sec p {
+    font-size: 15px;
+    line-height: 1.75;
+    text-align: justify;
+    text-justify: inter-word;
+    color: inherit;
+  }
+
+  .lk-gallery {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 26px;
+  }
+
+  .lk-gallery figure {
+    margin: 0;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: #e9ecf5;
+  }
+
+  .lk-gallery img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 0.4s;
+  }
+
+  .lk-gallery figure:hover img {
+    transform: scale(1.05);
+  }
+
+  .lk-foot {
+    padding: 26px 0;
+  }
+
+  .lk-foot img {
+    height: 48px;
+    width: auto;
+  }
+
+  @media (max-width: 900px) {
+    .lk-gallery {
+      gap: 14px;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .lk-wrap {
+      padding: 0 16px;
+    }
+
+    .lk-hero {
+      height: 220px;
+      background-image: url('/opt/2025/10/IMG_9754-2-1-scaled-800.webp');
+    }
+
+    .lk-hero h1 {
+      font-size: 24px;
+    }
+
+    .lk-sec {
+      padding: 36px 0 40px;
+    }
+
+    .lk-sec h2 {
+      font-size: 21px;
+    }
+
+    .lk-sec p {
+      text-align: left;
+    }
+
+    .lk-gallery {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -1,0 +1,260 @@
+---
+import { opt } from '../lib/img';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+
+interface Card {
+  title: string;
+  image: string;
+  text: string;
+  /** The original "Alcohol, Beverage" card has no inner padding. */
+  flush?: boolean;
+}
+
+// Three columns of two cards, in the original column order.
+const columns: Card[][] = [
+  [
+    {
+      title: 'Meat',
+      image: '/uploads/2025/05/meat.jpg',
+      text: 'We handle many products, mainly Japanese Wagyu beef and Australian beef. Among them, Japanese Wagyu beef is highly appreciated in Europe, the United States, and Asia for its tender meat and delicate, mellow flavor.',
+    },
+    {
+      title: 'Dried Ingredients/Other',
+      image: '/uploads/2025/05/gatecgories-ingredent.jpg',
+      text: 'We handle various Japanese seasonings such as soy sauce, miso, sauce, and dashi, as well as fish paste products such as kamaboko (fish cake). We also carry many other Japanese products, such as natto (fermented soybeans), umeboshi (pickled plums), and nori (seaweed).',
+    },
+  ],
+  [
+    {
+      title: 'Frozen Seafood',
+      image: '/uploads/2025/05/catecgorites-seafoods-1.jpg',
+      text: 'We handle various products, including fish, shrimp, octopus, shellfish, etc. We purchase products by monthly frozen containers from Japan and by overland transport from other neighboring countries. Demand is growing in Cambodia, including mass merchandisers and restaurants.',
+    },
+    {
+      title: 'Vegetable, Fruits',
+      image: '/uploads/2025/05/gatecgories-vegetable.jpg',
+      text: 'We deal in vegetables and fruits imported from Japan and other countries, and we purchase products by air about ten times a month. We also handle vegetables grown on our farms, such as lettuce and bitter gourd, and can introduce them to you. Please feel free to contact us.',
+    },
+  ],
+  [
+    {
+      title: 'Fresh Seafood',
+      image: '/uploads/2025/05/frozed-seafoods.jpg',
+      text: 'We handle a variety of fresh fish, including tuna and salmon. We purchase products from Japan by air about ten times a month. Some fresh fish may not be available depending on the season. Please feel free to inquire.',
+    },
+    {
+      title: 'Alcohol, Beverage',
+      image: '/uploads/2025/10/23186f15-63ef-47c3-9aae-e754d23b770f.jpg',
+      text: 'We deal mainly in Japanese alcoholic beverages. We have a large selection of sake, shochu, whiskey, plum wine, and many other products.',
+      flush: true,
+    },
+  ],
+];
+---
+
+<Base
+  title="Products Japanese Food Products Distributor in Cambodia | LOKA"
+  description="Our strength is that we handle products in a variety of temperature zones: frozen, chilled, and refrigerated."
+  ogImage="/uploads/2025/05/meat.jpg"
+>
+  <Hero image="/uploads/2025/05/banner-prodcuts.jpg" title="LOKA PRODUCTS" overlay={0.6} class="products-hero" />
+
+  <section class="intro">
+    <div class="intro__col">
+      <h2 class="intro__title">OUR PRODUCTS</h2>
+    </div>
+    <div class="intro__col intro__text">
+      <p>
+        We handle a wide variety of items from Japan and other countries, such as Wagyu beef, sake, fresh seafood, vegetables, fruits, and more. <br />Our strength lies in our ability to manage products across different temperature zones, frozen, chilled, and dry.<br />We offer over 500 products, and we can also fulfill custom orders upon request. Please feel free to contact us for more information.
+      </p>
+    </div>
+  </section>
+
+  <section class="cards" aria-label="Product categories">
+    {columns.map((col) => (
+      <div class="cards__col">
+        {col.map((card) => (
+          <details class="card" open>
+            <summary class="card__toggle">
+              <img src={opt(card.image, true)} alt="Click to toggle" loading="lazy" />
+              <span class="visually-hidden">{card.title}</span>
+            </summary>
+            <div class:list={['card__body', { 'card__body--flush': card.flush }]}>
+              <h3 class="card__title">{card.title}</h3>
+              <p>{card.text}</p>
+            </div>
+          </details>
+        ))}
+      </div>
+    ))}
+  </section>
+</Base>
+
+<style>
+  @media (max-width: 1024px) {
+    :global(main .hero.products-hero) {
+      min-height: 300px;
+      background-size: cover;
+    }
+  }
+
+  @media (max-width: 767px) {
+    :global(main .hero.products-hero) {
+      min-height: 150px;
+    }
+  }
+
+  /* Intro band */
+  .intro {
+    display: flex;
+    align-items: center;
+    padding: 0 200px;
+    background: var(--loka-navy);
+    color: #fff;
+  }
+
+  .intro__col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 50%;
+    padding: 10px;
+  }
+
+  .intro__title {
+    width: 500px;
+    max-width: 100%;
+    font-size: 60px;
+    font-weight: 900;
+    line-height: 1;
+    color: #fff;
+  }
+
+  .intro__text p {
+    width: 500px;
+    max-width: 100%;
+    margin: 0;
+  }
+
+  /* Category cards */
+  .cards {
+    display: flex;
+    padding: 30px 200px;
+  }
+
+  .cards__col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 45%;
+    flex: 1 1 0;
+    padding: 10px;
+  }
+
+  .card {
+    margin: 0 -8px;
+  }
+
+  .card__toggle {
+    display: block;
+    padding: 10px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .card__toggle::-webkit-details-marker {
+    display: none;
+  }
+
+  .card__toggle img {
+    display: block;
+    width: 100%;
+    border-radius: 10px;
+  }
+
+  .card__toggle:focus-visible {
+    outline: 2px solid var(--loka-navy);
+    outline-offset: -2px;
+  }
+
+  .card__body {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 99%;
+    min-height: 290px;
+    padding: 10px;
+    border-radius: 10px;
+    background: var(--loka-navy);
+    color: #fff;
+  }
+
+  .cards__col:last-child .card__body {
+    width: 100%;
+  }
+
+  .card__body--flush {
+    padding: 0;
+  }
+
+  .card__body--flush .card__title {
+    margin-top: 6px;
+  }
+
+  .card__title {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+    color: #fff;
+    transform: scale(0.95);
+    transition: transform 0.4s;
+  }
+
+  .card__body p {
+    margin: 0;
+  }
+
+  @media (max-width: 1024px) {
+    .intro {
+      padding: 0 30px;
+    }
+
+    .intro__title {
+      font-size: 40px;
+    }
+
+    .cards {
+      padding: 30px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .intro {
+      flex-direction: column;
+      align-items: stretch;
+      margin-top: 20px;
+      padding: 10px 30px 20px;
+    }
+
+    .intro__col {
+      width: 100%;
+    }
+
+    .intro__title {
+      align-self: flex-start;
+      width: auto;
+      margin-top: 10px;
+      font-size: 30px;
+    }
+
+    .cards {
+      flex-direction: column;
+      padding: 30px;
+    }
+
+    .cards__col {
+      width: 100%;
+    }
+  }
+</style>

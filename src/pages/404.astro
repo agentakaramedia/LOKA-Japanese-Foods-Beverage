@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+---
+
+<Base title="Page not found - LOKA JAPANESE FOOD BEVERAGE">
+  <section class="not-found">
+    <h1 class="not-found__title">Not Found</h1>
+    <h2 class="not-found__subtitle">This is somewhat embarrassing, isn’t it?</h2>
+    <!-- The WordPress theme offered a site search here; this static rebuild links home instead. -->
+    <p>It looks like nothing was found at this location. Please return to the <a href="/">home page</a>.</p>
+  </section>
+</Base>
+
+<style>
+  .not-found {
+    padding: 0 15px 46px;
+    text-align: center;
+  }
+
+  .not-found__title {
+    margin-bottom: 20px;
+    padding: 90px 0;
+    font-size: 60px;
+    font-weight: 900;
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--loka-red);
+  }
+
+  .not-found__subtitle {
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #242424;
+  }
+
+  .not-found p {
+    font-size: 15.4px;
+  }
+
+  .not-found a {
+    color: var(--loka-navy);
+    text-decoration: underline;
+  }
+</style>

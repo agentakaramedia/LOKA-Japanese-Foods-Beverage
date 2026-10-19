@@ -1,0 +1,214 @@
+---
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import { LINKS } from '../data/site';
+
+const teamVideos = [
+  '/uploads/2025/08/Download-2.mp4',
+  '/uploads/2025/08/Download-4.mp4',
+  '/uploads/2025/08/Download-3.mp4',
+];
+
+const youtube = ['dW2TyhS3DR4', 'cYQBxAHlorY'];
+---
+
+<Base
+  title="Japanese Food & Beverage Experts in Cambodia"
+  description="Get to know the dedicated team behind LOKA, Cambodia's trusted Japanese food and beverage distributor. Discover the professionals driving our commitment to quality and service."
+  ogImage="/uploads/2025/05/Phatya.jpg"
+>
+  <Hero image="/uploads/2025/10/IMG_9754-2-1-2048x1150.jpg" mobileImage="/uploads/2025/05/media-resource-1.jpg" title="OUR TEAM">
+    <p class="team-hero__text">We take pride in our work. You will be too. Apply to join our LOKA team!</p>
+    <a slot="after" class="e-button team-hero__btn" href={LINKS.career}>Explore LOKA's open positions →</a>
+  </Hero>
+
+  <div class="spacer-102" aria-hidden="true"></div>
+
+  <section class="team-videos" aria-label="Meet our team">
+    {teamVideos.map((src) => (
+      <div class="team-videos__item">
+        <video src={src} playsinline loop controls preload="metadata"></video>
+      </div>
+    ))}
+  </section>
+
+  <div class="spacer-135" aria-hidden="true"></div>
+
+  <section class="media">
+    <h2 class="media__title">MEDIA RESOURCES</h2>
+    <span class="media__divider e-divider" aria-hidden="true"></span>
+    <div class="media__grid">
+      {youtube.map((id) => (
+        <div class="media__item">
+          <iframe
+            src={`https://www.youtube-nocookie.com/embed/${id}?controls=1&rel=0&playsinline=0&mute=1&loop=1&playlist=${id}`}
+            title="YouTube video player"
+            loading="lazy"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            referrerpolicy="strict-origin-when-cross-origin"
+            allowfullscreen
+          ></iframe>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <div class="spacer-122" aria-hidden="true"></div>
+
+  <section class="cta">
+    <h2 class="cta__text">Contact us for more information on LOKA Japanese Foods&amp;Beverage news, events, or media partnerships</h2>
+    <a class="e-button cta__btn" href="/contact/">Get In Touch !</a>
+  </section>
+</Base>
+
+<style>
+  .team-hero__text {
+    width: 550px;
+    margin: 0;
+    font-size: 14px;
+    font-weight: 800;
+    color: #fff;
+  }
+
+  .team-hero__btn {
+    background: #e00417;
+  }
+
+  .spacer-102 {
+    height: 102px;
+  }
+
+  .spacer-135 {
+    height: 135px;
+  }
+
+  .spacer-122 {
+    height: 122px;
+  }
+
+  .team-videos {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    max-width: 1020px;
+    min-height: 380px;
+    margin: 0 auto;
+    padding: 10px;
+  }
+
+  .team-videos__item {
+    position: relative;
+    height: 400px;
+  }
+
+  .team-videos__item video {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    background: #000;
+    object-fit: cover;
+  }
+
+  .media {
+    padding: 10px 0 0;
+  }
+
+  .media__title {
+    padding: 0 10px;
+    font-size: 60px;
+    font-weight: 900;
+    line-height: 1;
+    color: #062c7e;
+    text-align: center;
+  }
+
+  .media__divider {
+    margin: 20px 10px 10px;
+    width: auto;
+    color: #062c7e;
+  }
+
+  .media__grid {
+    display: flex;
+    padding: 0 200px;
+  }
+
+  .media__item {
+    width: 50%;
+    padding: 10px;
+  }
+
+  .media__item iframe {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border: 0;
+    border-radius: 10px;
+    background: #000;
+  }
+
+  .cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    padding: 0 200px;
+    background: #ccf3ff;
+    text-align: center;
+  }
+
+  .cta__text {
+    padding-top: 30px;
+    font-size: 20px;
+    font-weight: 400;
+    line-height: 1;
+    color: #000;
+  }
+
+  .cta__btn {
+    margin-bottom: 30px;
+    background: var(--loka-navy-2);
+  }
+
+  @media (max-width: 1024px) {
+    .media__grid,
+    .cta {
+      padding-inline: 30px;
+    }
+  }
+
+  @media (max-width: 767px) {
+    .team-hero__text {
+      width: auto;
+    }
+
+    .team-videos {
+      grid-template-columns: 1fr;
+    }
+
+    .media__title {
+      font-size: 30px;
+    }
+
+    .media__grid {
+      flex-direction: column;
+    }
+
+    .media__item {
+      width: 100%;
+    }
+
+    .cta {
+      padding: 0 30px 30px;
+    }
+
+    .cta__text {
+      line-height: 1.5;
+    }
+
+    .cta__btn {
+      margin-bottom: 0;
+    }
+  }
+</style>

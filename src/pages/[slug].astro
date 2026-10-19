@@ -1,0 +1,134 @@
+---
+import { opt } from '../lib/img';
+import type { GetStaticPaths } from 'astro';
+import Base from '../layouts/Base.astro';
+import Hero from '../components/Hero.astro';
+import Icon from '../components/Icon.astro';
+import Lightbox from '../components/Lightbox.astro';
+import { posts, type Post } from '../data/posts';
+
+export const getStaticPaths = (() => posts.map((post) => ({ params: { slug: post.slug }, props: { post } }))) satisfies GetStaticPaths;
+
+const { post } = Astro.props as { post: Post };
+const ogImage = post.image ?? post.gallery?.[0];
+---
+
+<Base title={post.seoTitle} description={post.description} ogImage={ogImage} ogType="article">
+  <Hero image="/uploads/2025/05/banner-camfoods.jpg" title="DETAIL OF NEWS &amp; EVENTS" overlay={0.6} />
+
+  <article class="post">
+    <div class:list={['post__spacer', { 'post__spacer--double': post.spacersBefore > 1 }]} aria-hidden="true"></div>
+
+    <h2 class="post__title e-row">{post.title}</h2>
+    {post.spacerAfterTitle && <div class="post__spacer" aria-hidden="true"></div>}
+
+    <ul class="post__meta e-row">
+      <li><Icon name="calendar-alt" class="post__icon" /><span>{post.date}</span></li>
+      <li><Icon name="map-marked-alt" class="post__icon" /><span>{post.location}</span></li>
+    </ul>
+
+    <div class="post__spacer" aria-hidden="true"></div>
+
+    <div class="post__body e-row" set:html={post.body} />
+
+    {post.image && (
+      <div class="post__image">
+        <img src={opt(post.image)} alt={post.title} loading="lazy" />
+      </div>
+    )}
+
+    {post.gallery && (
+      <div class="post__gallery">
+        {post.gallery.map((src, i) => (
+          <a href={opt(src)} data-lightbox="post-gallery" class="post__gallery-item">
+            <img src={opt(src, true)} alt={`${post.title} – photo ${i + 1}`} loading="lazy" />
+          </a>
+        ))}
+      </div>
+    )}
+  </article>
+
+  {post.gallery && <Lightbox />}
+</Base>
+
+<style>
+  .post__spacer {
+    height: 45px;
+  }
+
+  .post__spacer--double {
+    height: 90px;
+  }
+
+  .e-row {
+    padding: 0 200px;
+  }
+
+  .post__title {
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+    color: #000;
+  }
+
+  .post__meta li {
+    display: flex;
+    align-items: center;
+    font-size: 14px;
+    line-height: 1.6;
+    color: #000;
+  }
+
+  .post__meta :global(.post__icon) {
+    width: 25px;
+    height: 25px;
+    margin-right: 15px;
+    color: var(--loka-navy);
+  }
+
+  .post__body {
+    /* original #7a7a7a darkened a touch to meet WCAG AA contrast */
+    color: #767676;
+  }
+
+  .post__body :global(ul) {
+    margin: 0 0 20px;
+    padding-left: 20px;
+    list-style: disc;
+  }
+
+  .post__image {
+    display: flex;
+    justify-content: center;
+    padding: 10px;
+  }
+
+  .post__image img {
+    border-radius: 10px;
+  }
+
+  .post__gallery {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    align-items: start;
+    padding: 10px 0 10px 10px;
+  }
+
+  .post__gallery-item {
+    display: block;
+    margin-top: 10px;
+    padding: 0 10px 10px 0;
+  }
+
+  .post__gallery-item img {
+    display: block;
+    width: 100%;
+    border: 2px solid #cfcfcf;
+  }
+
+  @media (max-width: 767px) {
+    .e-row {
+      padding: 0 30px;
+    }
+  }
+</style>

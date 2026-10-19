@@ -1,0 +1,43 @@
+---
+/**
+ * Mirrors the original WordPress pages that have no content of their own
+ * (only the theme sidebar with an empty "Recent comments" widget).
+ */
+---
+
+<div class="empty-page">
+  <div class="empty-page__content"><slot /></div>
+  <aside class="empty-page__sidebar" aria-label="Sidebar">
+    <div class="empty-page__widget"></div>
+    <div class="empty-page__widget">No comments to show.</div>
+  </aside>
+</div>
+
+<style>
+  .empty-page {
+    display: grid;
+    grid-template-columns: 1fr 337.5px;
+    gap: 30px;
+    min-height: 450px;
+  }
+
+  .empty-page__widget {
+    line-height: 1.4;
+  }
+
+  .empty-page__widget:first-child {
+    height: 31px;
+    margin-bottom: 30px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.106);
+  }
+
+  @media (max-width: 1024px) {
+    .empty-page {
+      grid-template-columns: 1fr;
+    }
+
+    .empty-page__sidebar {
+      display: none;
+    }
+  }
+</style>

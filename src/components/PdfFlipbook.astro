@@ -1,0 +1,307 @@
+---
+/**
+ * PDF "flipbook" viewer replacing the original DearFlip (dFlip) WordPress plugin.
+ * Desktop shows the cover alone and then two-page spreads; phones show one page at a time.
+ */
+import Icon from './Icon.astro';
+
+interface Props {
+  src: string;
+  title: string;
+}
+
+const { src, title } = Astro.props;
+---
+
+<div class="flipbook" data-flipbook data-src={src} data-title={title} role="region" aria-label={title} tabindex="-1">
+  <div class="flipbook__stage" data-stage>
+    <p class="flipbook__status" data-status>Loading PDF…</p>
+    <div class="flipbook__spread" data-spread></div>
+  </div>
+
+  <button class="flipbook__arrow flipbook__arrow--prev" type="button" aria-label="Previous page" data-prev hidden>
+    <Icon name="chevron-left" />
+  </button>
+  <button class="flipbook__arrow flipbook__arrow--next" type="button" aria-label="Next page" data-next>
+    <Icon name="chevron-right" />
+  </button>
+
+  <div class="flipbook__toolbar" role="toolbar" aria-label="PDF controls">
+    <span class="flipbook__page" data-page aria-live="polite">1/–</span>
+    <button type="button" aria-label="Zoom in" data-zoom-in>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M12 8v8M8 12h8" /></svg>
+    </button>
+    <button type="button" aria-label="Zoom out" data-zoom-out disabled>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9" /><path d="M8 12h8" /></svg>
+    </button>
+    <button type="button" aria-label="Toggle fullscreen" data-fullscreen>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M15 4h5v5M20 15v5h-5M9 20H4v-5M4 4l6 6M20 4l-6 6M20 20l-6-6M4 20l6-6" /></svg>
+    </button>
+    <button type="button" aria-label="Share" data-share>
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="is-filled"><circle cx="18" cy="5" r="3" /><circle cx="6" cy="12" r="3" /><circle cx="18" cy="19" r="3" /><path d="M8.6 13.5l6.8 4M15.4 6.5l-6.8 4" /></svg>
+    </button>
+    <a href={src} download aria-label="Download PDF" data-download>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14" /></svg>
+    </a>
+  </div>
+</div>
+
+<script>
+  import * as pdfjs from 'pdfjs-dist';
+  import workerUrl from 'pdfjs-dist/build/pdf.worker.min.mjs?url';
+
+  pdfjs.GlobalWorkerOptions.workerSrc = workerUrl;
+
+  for (const root of document.querySelectorAll<HTMLElement>('[data-flipbook]')) {
+    const q = <T extends Element>(sel: string) => root.querySelector<T>(sel)!;
+    const stage = q<HTMLElement>('[data-stage]');
+    const spreadEl = q<HTMLElement>('[data-spread]');
+    const status = q<HTMLElement>('[data-status]');
+    const pageLabel = q<HTMLElement>('[data-page]');
+    const prevBtn = q<HTMLButtonElement>('[data-prev]');
+    const nextBtn = q<HTMLButtonElement>('[data-next]');
+    const zoomIn = q<HTMLButtonElement>('[data-zoom-in]');
+    const zoomOut = q<HTMLButtonElement>('[data-zoom-out]');
+
+    let doc: pdfjs.PDFDocumentProxy | null = null;
+    let current = 1; // first page of the visible spread
+    let zoom = 1;
+    let renderToken = 0;
+
+    const twoUp = () => root.clientWidth >= 768;
+    const spreadPages = (first: number) => {
+      if (!doc) return [first];
+      if (!twoUp() || first === 1) return [first];
+      return first + 1 <= doc.numPages ? [first, first + 1] : [first];
+    };
+    // Spreads start on even pages after the cover: 1 | 2-3 | 4-5 ...
+    const normalise = (page: number) => (twoUp() && page > 1 ? page - (page % 2) : page);
+
+    const render = async () => {
+      if (!doc) return;
+      const token = ++renderToken;
+      const pages = spreadPages(current);
+      const avail = { w: stage.clientWidth - 40, h: stage.clientHeight - 40 };
+      const canvases = await Promise.all(
+        pages.map(async (n) => {
+          const page = await doc!.getPage(n);
+          const base = page.getViewport({ scale: 1 });
+          const fit = Math.min(avail.h / base.height, avail.w / pages.length / base.width) * zoom;
+          const dpr = window.devicePixelRatio || 1;
+          const viewport = page.getViewport({ scale: fit * dpr });
+          const canvas = document.createElement('canvas');
+          canvas.width = Math.floor(viewport.width);
+          canvas.height = Math.floor(viewport.height);
+          canvas.style.width = `${Math.floor(viewport.width / dpr)}px`;
+          canvas.style.height = `${Math.floor(viewport.height / dpr)}px`;
+          canvas.setAttribute('role', 'img');
+          canvas.setAttribute('aria-label', `Page ${n}`);
+          await page.render({ canvas, viewport }).promise;
+          return canvas;
+        }),
+      );
+      if (token !== renderToken) return;
+      spreadEl.replaceChildren(...canvases);
+      spreadEl.classList.toggle('is-zoomed', zoom > 1);
+      const last = pages[pages.length - 1];
+      pageLabel.textContent = `${pages.length > 1 ? `${pages[0]}-${last}` : pages[0]}/${doc.numPages}`;
+      prevBtn.hidden = current <= 1;
+      nextBtn.hidden = last >= doc.numPages;
+      zoomOut.disabled = zoom <= 1;
+      zoomIn.disabled = zoom >= 3;
+    };
+
+    const go = (dir: 1 | -1) => {
+      if (!doc) return;
+      const pages = spreadPages(current);
+      const target = dir > 0 ? pages[pages.length - 1] + 1 : current - (twoUp() && current > 2 ? 2 : 1);
+      current = normalise(Math.min(Math.max(target, 1), doc.numPages));
+      zoom = 1;
+      render();
+    };
+
+    prevBtn.addEventListener('click', () => go(-1));
+    nextBtn.addEventListener('click', () => go(1));
+    zoomIn.addEventListener('click', () => {
+      zoom = Math.min(zoom + 0.5, 3);
+      render();
+    });
+    zoomOut.addEventListener('click', () => {
+      zoom = Math.max(zoom - 0.5, 1);
+      render();
+    });
+    q('[data-fullscreen]').addEventListener('click', () => {
+      if (document.fullscreenElement) document.exitFullscreen();
+      else root.requestFullscreen?.();
+    });
+    q('[data-share]').addEventListener('click', async () => {
+      const data = { title: root.dataset.title, url: location.href };
+      if (navigator.share) await navigator.share(data).catch(() => {});
+      else await navigator.clipboard?.writeText(location.href);
+    });
+    root.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight') go(1);
+      if (e.key === 'ArrowLeft') go(-1);
+    });
+    let resizeTimer = 0;
+    new ResizeObserver(() => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        current = normalise(current);
+        render();
+      }, 150);
+    }).observe(stage);
+
+    pdfjs
+      .getDocument({ url: root.dataset.src! })
+      .promise.then((loaded) => {
+        doc = loaded;
+        status.remove();
+        render();
+      })
+      .catch(() => {
+        status.innerHTML = `Unable to display the PDF. <a href="${root.dataset.src}">Download it instead</a>.`;
+      });
+  }
+</script>
+
+<style>
+  .flipbook {
+    position: relative;
+    height: clamp(400px, 62.5vw, 900px);
+    background: #777;
+    overflow: hidden;
+    outline: none;
+  }
+
+  .flipbook:fullscreen {
+    height: 100vh;
+  }
+
+  .flipbook__stage {
+    position: absolute;
+    inset: 0 0 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: auto;
+  }
+
+  .flipbook__status {
+    margin: 0;
+    color: #fff;
+  }
+
+  .flipbook__status :global(a) {
+    text-decoration: underline;
+  }
+
+  .flipbook__spread {
+    display: flex;
+    margin: auto;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.25);
+  }
+
+  .flipbook__spread :global(canvas) {
+    display: block;
+    background: #fff;
+  }
+
+  .flipbook__arrow {
+    position: absolute;
+    top: 50%;
+    width: 50px;
+    height: 100px;
+    margin-top: -50px;
+    padding: 0 8px;
+    border: 0;
+    background: none;
+    color: #fff;
+    opacity: 0.85;
+    cursor: pointer;
+  }
+
+  .flipbook__arrow[hidden] {
+    display: none;
+  }
+
+  .flipbook__arrow:hover,
+  .flipbook__arrow:focus-visible {
+    opacity: 1;
+  }
+
+  .flipbook__arrow :global(svg) {
+    width: 100%;
+    height: 100%;
+  }
+
+  .flipbook__arrow--prev {
+    left: 0;
+  }
+
+  .flipbook__arrow--next {
+    right: 0;
+  }
+
+  .flipbook__toolbar {
+    position: absolute;
+    left: 50%;
+    bottom: 10px;
+    display: flex;
+    align-items: stretch;
+    height: 42px;
+    border-radius: 5px;
+    background: #fff;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+    transform: translateX(-50%);
+  }
+
+  .flipbook__page {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 50px;
+    padding: 0 6px;
+    background: rgba(0, 0, 0, 0.03);
+    font-size: 12px;
+    color: #777;
+  }
+
+  .flipbook__toolbar button,
+  .flipbook__toolbar a {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    border: 0;
+    background: #fff;
+    color: #777;
+    cursor: pointer;
+  }
+
+  .flipbook__toolbar button:hover,
+  .flipbook__toolbar a:hover {
+    color: #333;
+  }
+
+  .flipbook__toolbar button:disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+
+  .flipbook__toolbar svg {
+    width: 20px;
+    height: 20px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .flipbook__toolbar svg.is-filled circle {
+    fill: currentColor;
+  }
+
+</style>
