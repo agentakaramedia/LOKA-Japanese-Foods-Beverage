@@ -1,0 +1,17 @@
+// Cloudflare Workers static-assets deployment (built from GitHub with `npm run build` + `npx wrangler deploy`).
+{
+  "name": "loka-japanese-foods-beverage",
+  "compatibility_date": "2026-10-01",
+  // Keep the *.workers.dev address and per-version preview links for checking builds
+  "workers_dev": true,
+  "preview_urls": true,
+  "assets": {
+    "directory": "./dist",
+    // Unknown URLs get the site's 404 page (built from src/pages/404.astro)
+    "not_found_handling": "404-page"
+  },
+  "routes": [
+    { "pattern": "lokajapanesefoodsbeverage.com", "custom_domain": true },
+    { "pattern": "www.lokajapanesefoodsbeverage.com", "custom_domain": true }
+  ]
+}
