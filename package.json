@@ -13,7 +13,8 @@
     "test": "playwright test",
     "check": "astro check",
     "optimize-images": "node scripts/optimize-images.mjs",
-    "prebuild": "node scripts/optimize-images.mjs"
+    "prebuild": "node scripts/optimize-images.mjs",
+    "postbuild": "node scripts/check-asset-sizes.mjs"
   },
   "dependencies": {
     "astro": "^7.4.0",
