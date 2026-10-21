@@ -1,0 +1,283 @@
+---
+import { opt } from '../../lib/img';
+import Base from '../../layouts/Base.astro';
+import { categories } from '../../data/products';
+
+interface Props {
+  lang: 'en' | 'ja';
+}
+
+const { lang } = Astro.props;
+
+const copy = {
+  en: {
+    title: 'Products Japanese Food Products Distributor in Cambodia | LOKA',
+    description: 'Wagyu, fresh and frozen seafood, sake, vegetables and fruits, Japanese ingredients, rice and kitchen essentials, imported and distributed in Cambodia by LOKA.',
+    heading: 'Products',
+    categories: 'Product Categories',
+  },
+  ja: {
+    title: '取扱商品 | カンボジアの日本食材卸 LOKA',
+    description: '和牛、冷蔵・冷凍水産品、日本酒、野菜・果物、調味料・加工食品、お米、キッチン用品まで。LOKAはカンボジアで日本の食材をお届けしています。',
+    heading: '取扱商品',
+    categories: '商品カテゴリー',
+  },
+}[lang];
+
+const hero = '/uploads/2026/10/products/products-header.png';
+---
+
+<Base
+  title={copy.title}
+  description={copy.description}
+  ogImage={hero}
+  lang={lang}
+  fonts={`family=Poppins:wght@300;400;500;600;700&family=Noto+Sans+Khmer:wght@400;500${lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500' : ''}`}
+>
+  <link rel="preload" as="image" href={opt(hero)} media="(min-width: 641px)" fetchpriority="high" />
+  <link rel="preload" as="image" href={opt(hero, true)} media="(max-width: 640px)" fetchpriority="high" />
+
+  <div class="loka-products-page">
+    <section class="pr-hero" style={`--hero:url('${opt(hero)}');--hero-m:url('${opt(hero, true)}')`}>
+      <h1>{copy.heading}</h1>
+    </section>
+
+    <section class="pr-band" aria-labelledby="product-categories">
+      <div class="pr-wrap">
+        <h2 id="product-categories">{copy.categories}</h2>
+      </div>
+    </section>
+
+    <div class="pr-wrap pr-cats">
+      {categories.map((c) => (
+        <details
+          id={c.id}
+          class="cat"
+          name="product-category"
+          style={`--img:url('${opt(c.image)}');--img-m:url('${opt(c.image, true)}')${c.focus ? `;--focus:${c.focus}` : ''}`}
+        >
+          <summary>
+            <h3 class="cat__title" set:html={c.title[lang]} />
+          </summary>
+          <p class="cat__text">{c.text[lang]}</p>
+        </details>
+      ))}
+    </div>
+  </div>
+</Base>
+
+<script>
+  // Home page tiles link to /products/#<category>: open that category on arrival.
+  const openFromHash = () => {
+    const target = location.hash && document.getElementById(decodeURIComponent(location.hash.slice(1)));
+    if (target instanceof HTMLDetailsElement) target.open = true;
+  };
+  openFromHash();
+  window.addEventListener('hashchange', openFromHash);
+</script>
+
+<style>
+  .loka-products-page {
+    --pr-navy: #2d35a0;
+    font-family: 'Poppins', 'Noto Sans JP', 'Noto Sans Khmer', Arial, sans-serif;
+    background: #fff;
+    line-height: 1.6;
+    overflow: hidden;
+    padding-bottom: 56px;
+  }
+
+  /* Same offsets as the About page, so the hero meets the header the same way. */
+  @media (min-width: 1025px) {
+    .loka-products-page {
+      margin-top: -15px;
+    }
+  }
+
+  @media (max-width: 1024px) {
+    .loka-products-page {
+      padding-top: 61px;
+    }
+  }
+
+  .pr-wrap {
+    max-width: 1320px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* Hero */
+  .pr-hero {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: clamp(240px, 32vw, 460px);
+    background: var(--pr-navy) var(--hero) center / cover no-repeat;
+    isolation: isolate;
+  }
+
+  .pr-hero::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(15, 20, 60, 0.45);
+  }
+
+  .pr-hero h1 {
+    margin: 0;
+    color: #fff;
+    font-family: inherit;
+    font-size: clamp(28px, 3.4vw, 44px);
+    font-weight: 500;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
+  }
+
+  /* "Product Categories" band */
+  .pr-band {
+    margin-top: 20px;
+    padding: 12px 0;
+    background: var(--pr-navy);
+  }
+
+  .pr-band h2 {
+    margin: 0;
+    color: #fff;
+    font-family: inherit;
+    font-size: clamp(20px, 2vw, 26px);
+    font-weight: 500;
+    line-height: 1.35;
+  }
+
+  /* Category banners: collapsed shows the title only, opening reveals the description. */
+  .pr-cats {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 32px;
+  }
+
+  .cat {
+    position: relative;
+    scroll-margin-top: 16px;
+    background: #333 var(--img) var(--focus, center) / cover no-repeat;
+    color: #fff;
+    text-align: center;
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .cat::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    background: rgba(0, 0, 0, 0.42);
+    transition: background-color 0.3s;
+  }
+
+  .cat:hover::before,
+  .cat[open]::before {
+    background: rgba(0, 0, 0, 0.58);
+  }
+
+  .cat summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: clamp(120px, 11vw, 170px);
+    padding: 16px 64px;
+    cursor: pointer;
+    list-style: none;
+  }
+
+  .cat summary::-webkit-details-marker {
+    display: none;
+  }
+
+  /* Chevron hint that the banner opens */
+  .cat summary::after {
+    content: "";
+    position: absolute;
+    top: clamp(60px, 5.5vw, 85px);
+    right: 28px;
+    width: 14px;
+    height: 14px;
+    border-right: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+    transform: translateY(-75%) rotate(45deg);
+    transition: transform 0.3s;
+    opacity: 0.85;
+  }
+
+  .cat[open] summary::after {
+    transform: translateY(-25%) rotate(-135deg);
+  }
+
+  .cat summary:focus-visible {
+    outline: 3px solid #fff;
+    outline-offset: -6px;
+  }
+
+  .cat[open] summary {
+    min-height: 0;
+    padding-top: 36px;
+    padding-bottom: 8px;
+  }
+
+  .cat__title {
+    margin: 0;
+    color: #fff;
+    font-family: inherit;
+    font-size: clamp(24px, 2.8vw, 38px);
+    font-weight: 500;
+    line-height: 1.3;
+    text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);
+  }
+
+  .cat__text {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 0 64px 40px;
+    font-size: clamp(15px, 1.25vw, 18px);
+    line-height: 1.7;
+    text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+  }
+
+  @media (max-width: 640px) {
+    .pr-wrap {
+      padding: 0 16px;
+    }
+
+    .pr-hero {
+      height: 220px;
+      background-image: var(--hero-m);
+    }
+
+    .cat {
+      background-image: var(--img-m);
+    }
+
+    .cat summary {
+      min-height: 96px;
+      padding: 12px 40px;
+    }
+
+    .cat summary::after {
+      top: 48px;
+      right: 16px;
+    }
+
+    .cat__text {
+      padding: 0 20px 20px;
+      font-size: 14px;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .cat::before,
+    .cat summary::after {
+      transition: none;
+    }
+  }
+</style>

@@ -1,6 +1,6 @@
 ---
 import Header from '../components/Header.astro';
-import { SITE_NAME } from '../data/site';
+import { SITE_NAME, altLang } from '../data/site';
 import '../styles/global.css';
 
 interface Props {
@@ -11,9 +11,11 @@ interface Props {
   ogType?: 'website' | 'article';
   /** Google Fonts css2 query (family=...) for pages whose original blocks loaded web fonts. */
   fonts?: string;
+  lang?: 'en' | 'ja';
 }
 
-const { title, description, ogImage, ogType = 'website', fonts } = Astro.props;
+const { title, description, ogImage, ogType = 'website', fonts, lang = 'en' } = Astro.props;
+const alt = altLang(Astro.url.pathname);
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const image = ogImage ? new URL(ogImage, Astro.site).href : undefined;
 // The original WordPress site is configured with "noindex, nofollow". Keep that behaviour
@@ -22,7 +24,7 @@ const allowIndexing = import.meta.env.PUBLIC_ALLOW_INDEXING === 'true';
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -30,8 +32,8 @@ const allowIndexing = import.meta.env.PUBLIC_ALLOW_INDEXING === 'true';
     {description && <meta name="description" content={description} />}
     <meta name="robots" content={allowIndexing ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'} />
     <link rel="canonical" href={canonical} />
-    <link rel="alternate" hreflang="ja" href={`https://lokajapanesefoodsbeverage.com/ja${Astro.url.pathname}`} />
-    <meta property="og:locale" content="en_US" />
+    {alt && <link rel="alternate" hreflang={alt.lang} href={new URL(alt.href, Astro.site)} />}
+    <meta property="og:locale" content={lang === 'ja' ? 'ja_JP' : 'en_US'} />
     <meta property="og:type" content={ogType} />
     <meta property="og:title" content={title} />
     {description && <meta property="og:description" content={description} />}

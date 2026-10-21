@@ -15,6 +15,10 @@
   --container: 1222px;
 }
 
+:root:lang(ja) {
+  --loka-font: 'Noto Sans JP', sans-serif;
+}
+
 *,
 *::before,
 *::after {
