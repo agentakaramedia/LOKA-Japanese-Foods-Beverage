@@ -15,16 +15,41 @@ const copy = {
     description: 'Wagyu, fresh and frozen seafood, sake, vegetables and fruits, Japanese ingredients, rice and kitchen essentials, imported and distributed in Cambodia by LOKA.',
     heading: 'Products',
     categories: 'Product Categories',
+    partners: 'Our Partners',
   },
   ja: {
     title: '取扱商品 | カンボジアの日本食材卸 LOKA',
     description: '和牛、冷蔵・冷凍水産品、日本酒、野菜・果物、調味料・加工食品、お米、キッチン用品まで。LOKAはカンボジアで日本の食材をお届けしています。',
     heading: '取扱商品',
     categories: '商品カテゴリー',
+    partners: '私たちのパートナー',
   },
 }[lang];
 
 const hero = '/uploads/2026/10/products/products-header.png';
+
+// Supplier logos, in the order the client supplied them. No links yet.
+// A third `true` marks a logo with white lettering, which needs a deeper tile to show.
+const partners = [
+  ['azuma-foods', 'Azuma Foods'],
+  ['toba-meat', 'Toba Meat'],
+  ['tablemark', 'TableMark'],
+  ['kunihiro', 'Kunihiro Oyster'],
+  ['akj', 'AKJ'],
+  ['kaneku', 'Kaneku'],
+  ['misaki-megumi', 'Misaki Megumi Suisan'],
+  ['nakata-foods', 'Nakata Foods'],
+  ['suigei', 'Suigei'],
+  ['nihonsakari', 'Nihonsakari'],
+  ['hamada', 'Hamada Shuzo'],
+  ['nabeshima', 'Nabeshima'],
+  ['babi920', 'Babi920'],
+  ['mori-suisan', 'Mori Suisan', true],
+  ['tsubaki', 'Tsubaki'],
+  ['asan-service', 'Asan Service'],
+  ['yamani', 'Yamani'],
+  ['japan-farm-products', 'Japan Farm Products'],
+].map(([file, name, whiteText]) => ({ src: `/uploads/2026/10/partners/${file}.png`, name, whiteText }));
 ---
 
 <Base
@@ -63,6 +88,20 @@ const hero = '/uploads/2026/10/products/products-header.png';
         </details>
       ))}
     </div>
+
+    <section class="pr-band pr-band--partners" aria-labelledby="our-partners">
+      <div class="pr-wrap">
+        <h2 id="our-partners">{copy.partners}</h2>
+      </div>
+    </section>
+
+    <ul class="pr-wrap partners">
+      {partners.map((p) => (
+        <li class:list={['partner', { 'partner--white-text': p.whiteText }]}>
+          <img src={opt(p.src, true)} alt={p.name} loading="lazy" decoding="async" />
+        </li>
+      ))}
+    </ul>
   </div>
 </Base>
 
@@ -242,6 +281,75 @@ const hero = '/uploads/2026/10/products/products-header.png';
     font-size: clamp(15px, 1.25vw, 18px);
     line-height: 1.7;
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
+  }
+
+  /* "Our Partners" logo grid: checkerboard of two lavender tints, as in the client mock-up. */
+  .pr-band--partners {
+    margin-top: 48px;
+  }
+
+  .partners {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 16px;
+    margin-top: 32px;
+    margin-bottom: 0;
+    list-style: none;
+  }
+
+  .partner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    padding: 14%;
+    background: #eceefb;
+  }
+
+  /* Six columns: shade alternate tiles, flipping each row. */
+  .partner:nth-child(12n + 2),
+  .partner:nth-child(12n + 4),
+  .partner:nth-child(12n + 6),
+  .partner:nth-child(12n + 7),
+  .partner:nth-child(12n + 9),
+  .partner:nth-child(12n + 11) {
+    background: #d3d7f7;
+  }
+
+  .partner img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* Drops the white box behind logos supplied without transparency. */
+    mix-blend-mode: multiply;
+  }
+
+  .partners .partner--white-text {
+    background: #8f96dd;
+  }
+
+  .partner--white-text img {
+    mix-blend-mode: normal;
+  }
+
+  @media (max-width: 900px) {
+    .partners {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+    }
+
+    /* An odd column count gives the checkerboard from plain odd/even. */
+    .partner:nth-child(n) {
+      background: #eceefb;
+    }
+
+    .partner:nth-child(even) {
+      background: #d3d7f7;
+    }
+
+    .partners .partner--white-text {
+      background: #8f96dd;
+    }
   }
 
   @media (max-width: 640px) {
