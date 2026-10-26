@@ -16,6 +16,8 @@ const copy = {
     heading: 'Products',
     categories: 'Product Categories',
     partners: 'Our Partners',
+    sake: 'Sake, Japanese Alcohol, Line-up',
+    sakeMore: 'Contact us for more line-up',
   },
   ja: {
     title: '取扱商品 | カンボジアの日本食材卸 LOKA',
@@ -23,6 +25,8 @@ const copy = {
     heading: '取扱商品',
     categories: '商品カテゴリー',
     partners: '私たちのパートナー',
+    sake: 'アルコール飲料ラインナップ',
+    sakeMore: 'その他のラインナップはお問い合わせください',
   },
 }[lang];
 
@@ -50,6 +54,23 @@ const partners = [
   ['yamani', 'Yamani'],
   ['japan-farm-products', 'Japan Farm Products'],
 ].map(([file, name, whiteText]) => ({ src: `/uploads/2026/10/partners/${file}.png`, name, whiteText }));
+
+// Sake and spirits brand logos, in the client mock-up's order. No links yet.
+const sakeBrands = [
+  ['yamazaki.png', 'The Yamazaki'],
+  ['hakushu.png', 'The Hakushu', true],
+  ['chita.png', 'The Chita'],
+  ['taketsuru.png', 'Taketsuru', true],
+  ['dassai.png', 'Dassai'],
+  ['iichiko.png', 'iichiko'],
+  ['hibiki.png', 'Hibiki', true],
+  ['daiyame.png', 'Daiyame'],
+  ['nabeshima.png', 'Nabeshima'],
+  ['kirishima.png', 'Kirishima'],
+  ['suigei.png', 'Suigei'],
+  ['sakari.png', 'Sakari'],
+  ['midorikawa.jpg', 'Midorikawa'],
+].map(([file, name, whiteText]) => ({ src: `/uploads/2026/10/sake/${file}`, name, whiteText }));
 ---
 
 <Base
@@ -102,6 +123,24 @@ const partners = [
         </li>
       ))}
     </ul>
+
+    <section class="pr-band pr-band--partners" aria-labelledby="sake-line-up">
+      <div class="pr-wrap">
+        <h2 id="sake-line-up">{copy.sake}</h2>
+      </div>
+    </section>
+
+    <ul class="pr-wrap partners">
+      {sakeBrands.map((p) => (
+        <li class:list={['partner', { 'partner--white-text': p.whiteText }]}>
+          <img src={opt(p.src, true)} alt={p.name} loading="lazy" decoding="async" />
+        </li>
+      ))}
+    </ul>
+
+    <div class="pr-wrap pr-more">
+      <a href="/contact/">{copy.sakeMore} <span aria-hidden="true">→</span></a>
+    </div>
   </div>
 </Base>
 
@@ -330,6 +369,21 @@ const partners = [
 
   .partner--white-text img {
     mix-blend-mode: normal;
+  }
+
+  .pr-more {
+    margin-top: 20px;
+    text-align: right;
+  }
+
+  .pr-more a {
+    color: var(--pr-navy);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .pr-more a:hover {
+    text-decoration: underline;
   }
 
   @media (max-width: 900px) {
