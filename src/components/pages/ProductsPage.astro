@@ -56,6 +56,7 @@ const partners = [
 ].map(([file, name, whiteText]) => ({ src: `/uploads/2026/10/partners/${file}.png`, name, whiteText }));
 
 // Sake and spirits brand logos, in the client mock-up's order. No links yet.
+// A third `true` marks a logo with white lettering: it keeps the checkerboard tile but skips the blend.
 const sakeBrands = [
   ['yamazaki.png', 'The Yamazaki'],
   ['hakushu.png', 'The Hakushu', true],
@@ -69,7 +70,6 @@ const sakeBrands = [
   ['kirishima.png', 'Kirishima'],
   ['suigei.png', 'Suigei'],
   ['sakari.png', 'Sakari'],
-  ['midorikawa.jpg', 'Midorikawa'],
 ].map(([file, name, whiteText]) => ({ src: `/uploads/2026/10/sake/${file}`, name, whiteText }));
 ---
 
@@ -132,7 +132,7 @@ const sakeBrands = [
 
     <ul class="pr-wrap partners">
       {sakeBrands.map((p) => (
-        <li class:list={['partner', { 'partner--white-text': p.whiteText }]}>
+        <li class:list={['partner', { 'partner--no-blend': p.whiteText }]}>
           <img src={opt(p.src, true)} alt={p.name} loading="lazy" decoding="async" />
         </li>
       ))}
@@ -341,7 +341,7 @@ const sakeBrands = [
     align-items: center;
     justify-content: center;
     aspect-ratio: 1;
-    padding: 14%;
+    padding: 7%;
     background: #eceefb;
   }
 
@@ -367,7 +367,8 @@ const sakeBrands = [
     background: #8f96dd;
   }
 
-  .partner--white-text img {
+  .partner--white-text img,
+  .partner--no-blend img {
     mix-blend-mode: normal;
   }
 
