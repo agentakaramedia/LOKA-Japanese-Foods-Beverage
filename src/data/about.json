@@ -41,20 +41,8 @@
     "title": "Serving a Wide Range of Industries",
     "blue": false,
     "text": "With a track record of serving more than 600 businesses, LOKA has established strong partnerships with key players across the food and beverage industry. Our customers include major supermarkets, restaurants, international hotel brands, retailers, e-commerce platforms, and other wholesalers. Through these partnerships, Japanese food products distributed by LOKA are now widely available throughout Cambodia.",
-    "images": [
-      {
-        "src": "/uploads/2026/10/LOKA3_1.jpg",
-        "alt": "LOKA business customers"
-      },
-      {
-        "src": "/uploads/2026/10/LOKA3_2.jpg",
-        "alt": "LOKA business customers"
-      },
-      {
-        "src": "/uploads/2026/10/LOKA3_3.jpg",
-        "alt": "LOKA business customers"
-      }
-    ]
+    "clients": true,
+    "images": []
   },
   {
     "title": "Fast and Nationwide Delivery",

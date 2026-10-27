@@ -10,6 +10,40 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = translator(lang);
+
+// Client logos for "Serving a Wide Range of Industries", in the client mock-up's order. No links yet.
+const clients = [
+  ['aeon.png', 'AEON'],
+  ['lucky-supermarket.png', 'Lucky Supermarket'],
+  ['ootoya.png', 'OOTOYA'],
+  ['ringer-hut.png', 'Ringer Hut'],
+  ['rosewood.png', 'Rosewood'],
+  ['emart24.png', 'emart24'],
+  ['yakiniku-like.png', 'Yakiniku Like'],
+  ['uraetei.png', 'Uraetei Cambodia'],
+  ['bijin-nabe.jpg', 'Bijin Nabe'],
+  ['le-ta-su.png', 'Shabu Shabu Le-Ta-Su'],
+  ['kyo-omakase.webp', 'KYO Omakase'],
+  ['kyo-wagyu.webp', 'KYO Wagyu'],
+  ['pepper-lunch.png', 'Pepper Lunch'],
+  ['genki-sushi.png', 'Genki Sushi'],
+  ['seigendo.webp', 'Seigendo Group'],
+  ['sofitel.png', 'Sofitel Phnom Penh Phokeethra'],
+  ['pizza-4ps.png', "Pizza 4P's"],
+  ['marugame-udon.png', 'Marugame Udon'],
+  ['azumaya.png', 'Azumaya Hotel'],
+  ['makro.png', 'makro'],
+  ['hotel-emion.png', 'Hotel Emion'],
+  ['nido.png', 'Yakitori Bar NIDO'],
+  ['sushi-box.png', 'Sushi Box'],
+  ['nagaworld.png', 'NagaWorld'],
+  ['seorae.png', 'Seorae'],
+  ['momo-paradise.png', 'MOMO Paradise'],
+  ['rice-holic.png', 'Rice Holic'],
+  ['tonkotsu-kazan.png', 'Tonkotsu Kazan Ramen'],
+  ['himawari.jpg', 'Himawari Hotel Apartments'],
+  ['shabu-shabu.png', 'Shabu Shabu & Sushi Buffet'],
+].map(([file, name]) => ({ src: `/uploads/2026/10/clients/${file}`, name }));
 ---
 
 <Base
@@ -31,11 +65,22 @@ const t = translator(lang);
         <div class="lk-wrap">
           <h2 set:html={t(s.title)} />
           <p set:html={t(s.text)} />
-          <div class="lk-gallery">
-            {s.images.map((img) => (
-              <figure><img src={opt(img.src, true)} alt={img.alt} loading="lazy" decoding="async" /></figure>
-            ))}
-          </div>
+          {s.clients ? (
+            <div class="lk-clients">
+              <h3>{t('LOKA’s Clients')}</h3>
+              <ul>
+                {clients.map((c) => (
+                  <li><img src={opt(c.src, true)} alt={c.name} loading="lazy" decoding="async" /></li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <div class="lk-gallery">
+              {s.images.map((img) => (
+                <figure><img src={opt(img.src, true)} alt={img.alt} loading="lazy" decoding="async" /></figure>
+              ))}
+            </div>
+          )}
         </div>
       </section>
     ))}
@@ -178,6 +223,63 @@ const t = translator(lang);
     transform: scale(1.05);
   }
 
+  /* "LOKA's Clients" logo grid: navy title bar over a checkerboard of two lavender tints,
+     as in the client mock-up. */
+  .lk-clients {
+    margin-top: 32px;
+  }
+
+  .lk-clients h3 {
+    margin: 0 0 12px;
+    padding: 6px 12px;
+    background: #2f3f8f;
+    color: #fff;
+    font-family: inherit;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+
+  .lk-clients ul {
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    gap: 12px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .lk-clients li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    aspect-ratio: 1;
+    padding: 7%;
+    background: #eceefb;
+  }
+
+  /* Ten columns: shade alternate tiles, flipping each row. */
+  .lk-clients li:nth-child(20n + 1),
+  .lk-clients li:nth-child(20n + 3),
+  .lk-clients li:nth-child(20n + 5),
+  .lk-clients li:nth-child(20n + 7),
+  .lk-clients li:nth-child(20n + 9),
+  .lk-clients li:nth-child(20n + 12),
+  .lk-clients li:nth-child(20n + 14),
+  .lk-clients li:nth-child(20n + 16),
+  .lk-clients li:nth-child(20n + 18),
+  .lk-clients li:nth-child(20n + 20) {
+    background: #d3d7f7;
+  }
+
+  .lk-clients img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    /* Drops the white box behind logos supplied without transparency. */
+    mix-blend-mode: multiply;
+  }
+
   .lk-foot {
     padding: 26px 0;
   }
@@ -190,6 +292,20 @@ const t = translator(lang);
   @media (max-width: 900px) {
     .lk-gallery {
       gap: 14px;
+    }
+
+    /* An odd column count gives the checkerboard from plain odd/even. */
+    .lk-clients ul {
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+    }
+
+    .lk-clients li:nth-child(n) {
+      background: #eceefb;
+    }
+
+    .lk-clients li:nth-child(odd) {
+      background: #d3d7f7;
     }
   }
 
@@ -221,6 +337,15 @@ const t = translator(lang);
 
     .lk-gallery {
       grid-template-columns: 1fr;
+    }
+
+    .lk-clients h3 {
+      font-size: 17px;
+    }
+
+    .lk-clients ul {
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
     }
   }
 </style>
