@@ -5,6 +5,7 @@ import Hero from '../../components/Hero.astro';
 import { LINKS, localHref } from '../../data/site';
 import { translator, type Lang } from '../../data/ja';
 import { categories } from '../../data/products';
+import { clients, partners, pick } from '../../data/logos';
 
 interface Props {
   lang: Lang;
@@ -23,6 +24,28 @@ const services = [
 ];
 
 const tiles = categories.filter((c) => c.onHome !== false);
+
+// "Our Clients & Partners" carousel rows, in the client mock-up's order. Each row holds an even
+// number of logos so the checkerboard stays unbroken where the duplicated set joins.
+const logoRows = [
+  {
+    logos: pick(clients, [
+      'AEON', 'Lucky Supermarket', 'OOTOYA', 'Ringer Hut', 'Rosewood', 'emart24', 'Yakiniku Like',
+      'Pepper Lunch', 'Genki Sushi', 'Seigendo Group', 'Sofitel Phnom Penh Phokeethra', "Pizza 4P's",
+      'Marugame Udon', 'NagaWorld',
+    ]),
+    more: t('See more clients'),
+    href: `${href('/about-us-loka/')}#clients`,
+  },
+  {
+    logos: pick(partners, [
+      'Nihonsakari', 'Azuma Foods', 'Toba Meat', 'TableMark', 'Kunihiro Oyster', 'Nabeshima',
+      'Hamada Shuzo', 'Kaneku', 'AKJ', 'Misaki Megumi Suisan', 'Tsubaki', 'Mori Suisan',
+    ]),
+    more: t('See more partners'),
+    href: `${href('/products/')}#our-partners`,
+  },
+];
 ---
 
 <Base
@@ -114,6 +137,35 @@ const tiles = categories.filter((c) => c.onHome !== false);
           ))}
         </div>
         <div class="lk-btn-row"><a class="lk-btn" href={href('/products/')} aria-label="More information about our products">{t("More Information")}</a></div>
+      </div>
+    </section>
+
+    <!-- Our Clients & Partners -->
+    <section class="lk-logos">
+      <div class="lk-wrap">
+        <h2 class="lk-title">{t("Our Clients & Partners")}</h2>
+        {logoRows.map((row, r) => (
+          <div class:list={['lk-logo-row', { 'lk-logo-row--flip': r % 2 }]}>
+            <div class="lk-marquee" data-marquee={r % 2 ? 'right' : 'left'}>
+              <button class="lk-arrow lk-arrow--prev" type="button" aria-label={lang === 'ja' ? '前へ' : 'Previous'}></button>
+              <div class="lk-marquee-view">
+                {/* The set is rendered twice so the loop can wrap seamlessly; the copy is hidden from assistive tech. */}
+                <ul class="lk-marquee-track">
+                  {[...row.logos, ...row.logos].map((l, i) => {
+                    const copy = i >= row.logos.length;
+                    return (
+                      <li class:list={{ 'lk-solid': l.solid, 'lk-white-text': l.whiteText }} aria-hidden={copy ? 'true' : undefined}>
+                        <img src={opt(l.src, true)} alt={copy ? '' : l.name} loading="lazy" decoding="async" draggable="false" />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              <button class="lk-arrow lk-arrow--next" type="button" aria-label={lang === 'ja' ? '次へ' : 'Next'}></button>
+            </div>
+            <a class="lk-more" href={row.href}>{row.more} <span aria-hidden="true">→</span></a>
+          </div>
+        ))}
       </div>
     </section>
 
@@ -535,6 +587,155 @@ const tiles = categories.filter((c) => c.onHome !== false);
     }
   }
 
+  /* Our Clients & Partners: two logo rows that drift on an endless loop in opposite directions;
+     the arrows step a few tiles either way. Driven by the script below. */
+  .lk-products {
+    padding-bottom: 30px;
+  }
+
+  .lk-logos {
+    padding: 20px 0 50px;
+  }
+
+  .lk-logo-row {
+    display: flex;
+    flex-direction: column;
+    margin-top: 22px;
+  }
+
+  .lk-marquee {
+    --tile: 100px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .lk-marquee-view {
+    flex: 1;
+    min-width: 0;
+    overflow: hidden;
+    touch-action: pan-y;
+    cursor: grab;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+    mask-image: linear-gradient(90deg, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+  }
+
+  .lk-marquee-view.is-dragging {
+    cursor: grabbing;
+  }
+
+  .lk-marquee-track {
+    display: flex;
+    gap: 12px;
+    width: max-content;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    will-change: transform;
+  }
+
+  .lk-marquee-track li {
+    flex: 0 0 var(--tile);
+    height: var(--tile);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 7px;
+    background: #eceefb;
+  }
+
+  /* Checkerboard of the two lavender tints, flipped on the second row. */
+  .lk-marquee-track li:nth-child(odd),
+  .lk-logo-row--flip .lk-marquee-track li:nth-child(even) {
+    background: #d3d7f7;
+  }
+
+  .lk-logo-row--flip .lk-marquee-track li:nth-child(odd) {
+    background: #eceefb;
+  }
+
+  .lk-marquee-track .lk-white-text,
+  .lk-logo-row--flip .lk-marquee-track .lk-white-text {
+    background: #8f96dd;
+  }
+
+  .lk-marquee-track img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    user-select: none;
+    /* Drops the white box behind logos supplied without transparency. */
+    mix-blend-mode: multiply;
+  }
+
+  .lk-marquee-track .lk-solid img,
+  .lk-marquee-track .lk-white-text img {
+    mix-blend-mode: normal;
+  }
+
+  .lk-arrow {
+    flex: 0 0 auto;
+    width: 30px;
+    height: 40px;
+    padding: 0;
+    border: 0;
+    background: var(--lk-navy);
+    cursor: pointer;
+    transition: opacity 0.2s;
+  }
+
+  .lk-arrow--prev {
+    clip-path: polygon(100% 0, 0 50%, 100% 100%);
+  }
+
+  .lk-arrow--next {
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
+  }
+
+  .lk-arrow:hover {
+    opacity: 0.75;
+  }
+
+  .lk-arrow:focus-visible {
+    outline: 2px solid var(--lk-navy);
+    outline-offset: 3px;
+    clip-path: none;
+  }
+
+  .lk-more {
+    align-self: flex-end;
+    margin: 10px 40px 0 0;
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--lk-text);
+  }
+
+  .lk-more:hover,
+  .lk-more:focus-visible {
+    text-decoration: underline;
+  }
+
+  @media (max-width: 640px) {
+    .lk-marquee {
+      --tile: 76px;
+      gap: 6px;
+    }
+
+    .lk-marquee-track {
+      gap: 8px;
+    }
+
+    .lk-arrow {
+      width: 20px;
+      height: 28px;
+    }
+
+    .lk-more {
+      margin-right: 26px;
+      font-size: 13px;
+    }
+  }
+
   /* S.E.A.T.S */
   .lk-seats {
     padding: 46px 0 50px;
@@ -557,3 +758,76 @@ const tiles = categories.filter((c) => c.onHome !== false);
     width: auto;
   }
 </style>
+
+<script>
+  // Logo marquee: drifts endlessly in the direction its data-marquee names, pauses while
+  // hovered or keyboard-focused, and steps a few tiles on an arrow click. Swiping or dragging
+  // moves it too. With reduced motion it only moves on request.
+  const SPEED = 30; // px per second
+  const STEP_TILES = 3;
+  const STEP_MS = 450;
+  const reduceMotion = matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  document.querySelectorAll<HTMLElement>('[data-marquee]').forEach((root) => {
+    const view = root.querySelector<HTMLElement>('.lk-marquee-view')!;
+    const track = root.querySelector<HTMLElement>('.lk-marquee-track')!;
+    const drift = root.dataset.marquee === 'right' ? -SPEED : SPEED;
+    let x = 0;
+    let last = performance.now();
+    let hovered = false;
+    let visible = true;
+    let step: { from: number; to: number; start: number } | null = null;
+    let drag: { id: number; startX: number; from: number } | null = null;
+
+    const gap = () => parseFloat(getComputedStyle(track).columnGap) || 0;
+    // Width of one copy of the logo set: the track holds two, so wrapping at it is seamless.
+    const loop = () => (track.scrollWidth + gap()) / 2;
+    const tileStep = () => (track.firstElementChild as HTMLElement).offsetWidth + gap();
+
+    const nudge = (dir: number) => {
+      const target = (step ? step.to : x) + dir * tileStep() * STEP_TILES;
+      step = { from: x, to: target, start: performance.now() };
+    };
+    root.querySelector('.lk-arrow--prev')!.addEventListener('click', () => nudge(-1));
+    root.querySelector('.lk-arrow--next')!.addEventListener('click', () => nudge(1));
+
+    view.addEventListener('pointerenter', (e) => { if (e.pointerType === 'mouse') hovered = true; });
+    view.addEventListener('pointerleave', () => { hovered = false; });
+
+    view.addEventListener('pointerdown', (e) => {
+      if (e.button !== 0) return;
+      step = null;
+      drag = { id: e.pointerId, startX: e.clientX, from: x };
+      view.setPointerCapture(e.pointerId);
+      view.classList.add('is-dragging');
+    });
+    view.addEventListener('pointermove', (e) => {
+      if (drag?.id === e.pointerId) x = drag.from - (e.clientX - drag.startX);
+    });
+    const endDrag = (e: PointerEvent) => {
+      if (drag?.id !== e.pointerId) return;
+      drag = null;
+      view.classList.remove('is-dragging');
+    };
+    view.addEventListener('pointerup', endDrag);
+    view.addEventListener('pointercancel', endDrag);
+
+    new IntersectionObserver(([entry]) => { visible = entry.isIntersecting; }).observe(root);
+
+    const frame = (now: number) => {
+      const dt = Math.min(now - last, 100) / 1000;
+      last = now;
+      if (step) {
+        const p = Math.min((now - step.start) / STEP_MS, 1);
+        x = step.from + (step.to - step.from) * (1 - (1 - p) ** 3);
+        if (p === 1) step = null;
+      } else if (!drag && !hovered && visible && !root.querySelector(':focus-visible') && !reduceMotion) {
+        x += drift * dt;
+      }
+      const w = loop();
+      track.style.transform = `translateX(${-(((x % w) + w) % w)}px)`;
+      requestAnimationFrame(frame);
+    };
+    requestAnimationFrame(frame);
+  });
+</script>

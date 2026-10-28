@@ -1,5 +1,6 @@
 ---
 import { opt } from '../../lib/img';
+import { partners } from '../../data/logos';
 import Base from '../../layouts/Base.astro';
 import { categories } from '../../data/products';
 
@@ -31,29 +32,6 @@ const copy = {
 }[lang];
 
 const hero = '/uploads/2026/10/products/products-header.png';
-
-// Supplier logos, in the order the client supplied them. No links yet.
-// A third `true` marks a logo with white lettering, which needs a deeper tile to show.
-const partners = [
-  ['azuma-foods', 'Azuma Foods'],
-  ['toba-meat', 'Toba Meat'],
-  ['tablemark', 'TableMark'],
-  ['kunihiro', 'Kunihiro Oyster'],
-  ['akj', 'AKJ'],
-  ['kaneku', 'Kaneku'],
-  ['misaki-megumi', 'Misaki Megumi Suisan'],
-  ['nakata-foods', 'Nakata Foods'],
-  ['suigei', 'Suigei'],
-  ['nihonsakari', 'Nihonsakari'],
-  ['hamada', 'Hamada Shuzo'],
-  ['nabeshima', 'Nabeshima'],
-  ['babi920', 'Babi920'],
-  ['mori-suisan', 'Mori Suisan', true],
-  ['tsubaki', 'Tsubaki'],
-  ['asan-service', 'Asan Service'],
-  ['yamani', 'Yamani'],
-  ['japan-farm-products', 'Japan Farm Products'],
-].map(([file, name, whiteText]) => ({ src: `/uploads/2026/10/partners/${file}.png`, name, whiteText }));
 
 // Sake and spirits brand logos, in the client mock-up's order. No links yet.
 // A third `true` marks a logo with white lettering: it keeps the checkerboard tile but skips the blend.
@@ -118,7 +96,7 @@ const sakeBrands = [
 
     <ul class="pr-wrap partners">
       {partners.map((p) => (
-        <li class:list={['partner', { 'partner--white-text': p.whiteText }]}>
+        <li class:list={['partner', { 'partner--white-text': p.whiteText, 'partner--no-blend': p.solid }]}>
           <img src={opt(p.src, true)} alt={p.name} loading="lazy" decoding="async" />
         </li>
       ))}

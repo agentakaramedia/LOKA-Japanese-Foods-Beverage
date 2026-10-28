@@ -1,5 +1,6 @@
 ---
 import { opt } from '../../lib/img';
+import { clients } from '../../data/logos';
 import Base from '../../layouts/Base.astro';
 import sections from '../../data/about.json';
 import { translator, type Lang } from '../../data/ja';
@@ -10,40 +11,6 @@ interface Props {
 
 const { lang } = Astro.props;
 const t = translator(lang);
-
-// Client logos for "Serving a Wide Range of Industries", in the client mock-up's order. No links yet.
-const clients = [
-  ['aeon.png', 'AEON'],
-  ['lucky-supermarket.png', 'Lucky Supermarket'],
-  ['ootoya.png', 'OOTOYA'],
-  ['ringer-hut.png', 'Ringer Hut'],
-  ['rosewood.png', 'Rosewood'],
-  ['emart24.png', 'emart24'],
-  ['yakiniku-like.png', 'Yakiniku Like'],
-  ['uraetei.png', 'Uraetei Cambodia'],
-  ['bijin-nabe.jpg', 'Bijin Nabe'],
-  ['le-ta-su.png', 'Shabu Shabu Le-Ta-Su'],
-  ['kyo-omakase.webp', 'KYO Omakase'],
-  ['kyo-wagyu.webp', 'KYO Wagyu'],
-  ['pepper-lunch.png', 'Pepper Lunch'],
-  ['genki-sushi.png', 'Genki Sushi'],
-  ['seigendo.webp', 'Seigendo Group'],
-  ['sofitel.png', 'Sofitel Phnom Penh Phokeethra'],
-  ['pizza-4ps.png', "Pizza 4P's"],
-  ['marugame-udon.png', 'Marugame Udon'],
-  ['azumaya.png', 'Azumaya Hotel'],
-  ['makro.png', 'makro'],
-  ['hotel-emion.png', 'Hotel Emion'],
-  ['nido.png', 'Yakitori Bar NIDO'],
-  ['sushi-box.png', 'Sushi Box'],
-  ['nagaworld.png', 'NagaWorld'],
-  ['seorae.png', 'Seorae'],
-  ['momo-paradise.png', 'MOMO Paradise'],
-  ['rice-holic.png', 'Rice Holic'],
-  ['tonkotsu-kazan.png', 'Tonkotsu Kazan Ramen'],
-  ['himawari.jpg', 'Himawari Hotel Apartments'],
-  ['shabu-shabu.png', 'Shabu Shabu & Sushi Buffet'],
-].map(([file, name]) => ({ src: `/uploads/2026/10/clients/${file}`, name }));
 ---
 
 <Base
@@ -61,7 +28,7 @@ const clients = [
     </section>
 
     {sections.map((s) => (
-      <section class:list={['lk-sec', { 'lk-blue': s.blue }]}>
+      <section class:list={['lk-sec', { 'lk-blue': s.blue }]} id={s.clients ? 'clients' : undefined}>
         <div class="lk-wrap">
           <h2 set:html={t(s.title)} />
           <p set:html={t(s.text)} />
@@ -70,7 +37,7 @@ const clients = [
               <h3>{t('LOKA’s Clients')}</h3>
               <ul>
                 {clients.map((c) => (
-                  <li><img src={opt(c.src, true)} alt={c.name} loading="lazy" decoding="async" /></li>
+                  <li class:list={{ 'lk-solid': c.solid }}><img src={opt(c.src, true)} alt={c.name} loading="lazy" decoding="async" /></li>
                 ))}
               </ul>
             </div>
@@ -278,6 +245,10 @@ const clients = [
     object-fit: contain;
     /* Drops the white box behind logos supplied without transparency. */
     mix-blend-mode: multiply;
+  }
+
+  .lk-clients .lk-solid img {
+    mix-blend-mode: normal;
   }
 
   .lk-foot {
