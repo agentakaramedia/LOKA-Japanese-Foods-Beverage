@@ -25,9 +25,9 @@ URLs keep the WordPress permalink structure with trailing slashes.
 
 ## Indexing
 
-The live WordPress site sends `noindex, nofollow` on every page, and this build does
-the same by default. Build with `PUBLIC_ALLOW_INDEXING=true` once the site should be
-indexed.
+Every page sends `<meta name="robots" content="index, follow">` (set in
+`src/layouts/Base.astro`) so search engines can index the site. The old WordPress site
+used `noindex, nofollow`; that has been removed.
 
 ## Structure
 
@@ -107,7 +107,7 @@ docs/design-system.md         colors, type, spacing, components, assets
 | Desktop (8 pages) | 98–100 | 98–100 | 96–100 |
 | Mobile (8 pages) | 92–100 | 98–100 | 93–96 |
 
-SEO scores 58–66 only because pages are `noindex` (see *Indexing*). Images are served
+SEO scores were 58–66 while pages were `noindex` (see *Indexing*; re-measure now). Images are served
 as WebP and the hero photo is preloaded. The remaining Lighthouse notes are the home
 page's "More Information" link text (original copy) and third-party YouTube cookies.
 - Content kept exactly as published, including existing quirks (e.g. the AEON 2022 post
