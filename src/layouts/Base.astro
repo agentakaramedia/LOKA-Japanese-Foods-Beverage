@@ -18,9 +18,6 @@ const { title, description, ogImage, ogType = 'website', fonts, lang = 'en' } = 
 const alt = altLang(Astro.url.pathname);
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const image = ogImage ? new URL(ogImage, Astro.site).href : undefined;
-// The original WordPress site is configured with "noindex, nofollow". Keep that behaviour
-// unless PUBLIC_ALLOW_INDEXING=true is set at build time.
-const allowIndexing = import.meta.env.PUBLIC_ALLOW_INDEXING === 'true';
 ---
 
 <!doctype html>
@@ -30,7 +27,7 @@ const allowIndexing = import.meta.env.PUBLIC_ALLOW_INDEXING === 'true';
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     {description && <meta name="description" content={description} />}
-    <meta name="robots" content={allowIndexing ? 'index, follow, max-image-preview:large' : 'noindex, nofollow'} />
+    <meta name="robots" content="index, follow" />
     <link rel="canonical" href={canonical} />
     {alt && <link rel="alternate" hreflang={alt.lang} href={new URL(alt.href, Astro.site)} />}
     <meta property="og:locale" content={lang === 'ja' ? 'ja_JP' : 'en_US'} />
