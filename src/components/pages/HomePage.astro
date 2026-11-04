@@ -2,7 +2,7 @@
 import { opt } from '../../lib/img';
 import Base from '../../layouts/Base.astro';
 import Hero from '../../components/Hero.astro';
-import { LINKS, localHref } from '../../data/site';
+import { LINKS, SITE_URL, localHref } from '../../data/site';
 import { translator, type Lang } from '../../data/ja';
 import { categories } from '../../data/products';
 import { clients, partners, pick } from '../../data/logos';
@@ -46,15 +46,38 @@ const logoRows = [
     href: `${href('/products/')}#our-partners`,
   },
 ];
+
+// Tells Google that the different brand names all refer to one organization.
+const organizationSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  name: 'LOKA',
+  alternateName: ['LOKA Japanese Foods & Beverage', 'LOKA Food & Beverage'],
+  url: `${SITE_URL}/`,
+  logo: `${SITE_URL}/uploads/2025/05/loka-logo-background.png`,
+  description: 'LOKA is a Japanese food and beverage importer and wholesaler in Cambodia.',
+  sameAs: [LINKS.facebook],
+};
+
+// Google supports one site name per domain, so WebSite data lives only on the English root (/), not /ja/.
+const websiteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'LOKA',
+  alternateName: ['LOKA Japanese Foods & Beverage', 'LOKA Food & Beverage'],
+  url: `${SITE_URL}/`,
+};
 ---
 
 <Base
-  title="Japanese Food Wholesaler in Cambodia | LOKA Japanese Foods"
+  title={lang === 'ja' ? 'LOKA | 公式サイト – カンボジアの日本食品・飲料' : 'LOKA | Official Website – Japanese Foods & Beverage Cambodia'}
   description="Suppliers Japanese Foods – Your trusted supplier of premium Japanese food in Cambodia. Wholesale seafood, seasonings, beverages & more!"
   ogImage="/uploads/2026/10/loka.png"
   lang={lang}
   fonts={`family=Poppins:wght@300;400;500;600;700&family=Cinzel:wght@600;700&family=Noto+Sans+Khmer:wght@400;500${lang === 'ja' ? '&family=Noto+Sans+JP:wght@400;500;600' : ''}`}
 >
+  <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(organizationSchema)} />
+  {lang === 'en' && <script is:inline slot="head" type="application/ld+json" set:html={JSON.stringify(websiteSchema)} />}
   <Hero
     class="home-hero"
     image="/uploads/2025/10/IMG_9754-2-1-2048x1150.jpg"
