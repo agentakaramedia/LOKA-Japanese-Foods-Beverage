@@ -25,20 +25,27 @@ const services = [
 
 const tiles = categories.filter((c) => c.onHome !== false);
 
-// "Our Clients & Partners" carousel: one merged row of client and supplier logos, in the
-// client mock-up's order.
-const logos = [
-  ...pick(clients, [
-    'AEON', 'Lucky Supermarket', 'OOTOYA', 'Ringer Hut', 'Rosewood', 'emart24', 'Yakiniku Like',
-    'Pepper Lunch', 'Genki Sushi', 'Seigendo Group', 'Sofitel Phnom Penh Phokeethra', "Pizza 4P's",
-    'Marugame Udon', 'NagaWorld',
-  ]),
-  // Mori Suisan's logo is white-on-transparent, invisible without a colored background behind
-  // it; swap in the black-background version for display here.
-  ...pick(partners, [
-    'Nihonsakari', 'Azuma Foods', 'Toba Meat', 'TableMark', 'Kunihiro Oyster', 'Nabeshima',
-    'Hamada Shuzo', 'Kaneku', 'AKJ', 'Misaki Megumi Suisan', 'Tsubaki', 'Mori Suisan',
-  ]).map((l) => (l.name === 'Mori Suisan' ? { ...l, src: '/uploads/2026/10/partners/mori-suisan-black.png' } : l)),
+// "Our Clients & Partners" carousel rows, in the client mock-up's order.
+const logoRows = [
+  {
+    logos: pick(clients, [
+      'AEON', 'Lucky Supermarket', 'OOTOYA', 'Ringer Hut', 'Rosewood', 'emart24', 'Yakiniku Like',
+      'Pepper Lunch', 'Genki Sushi', 'Seigendo Group', 'Sofitel Phnom Penh Phokeethra', "Pizza 4P's",
+      'Marugame Udon', 'NagaWorld',
+    ]),
+    more: t('See more clients'),
+    href: `${href('/about-us-loka/')}#clients`,
+  },
+  {
+    // Mori Suisan's logo is white-on-transparent, invisible without a colored background behind
+    // it; swap in the black-background version for display here.
+    logos: pick(partners, [
+      'Nihonsakari', 'Azuma Foods', 'Toba Meat', 'TableMark', 'Kunihiro Oyster', 'Nabeshima',
+      'Hamada Shuzo', 'Kaneku', 'AKJ', 'Misaki Megumi Suisan', 'Tsubaki', 'Mori Suisan',
+    ]).map((l) => (l.name === 'Mori Suisan' ? { ...l, src: '/uploads/2026/10/partners/mori-suisan-black.png' } : l)),
+    more: t('See more partners'),
+    href: `${href('/products/')}#our-partners`,
+  },
 ];
 
 // Tells Google that the different brand names all refer to one organization.
@@ -161,29 +168,28 @@ const websiteSchema = {
     <section class="lk-logos">
       <div class="lk-wrap">
         <h2 class="lk-title">{t("Our Clients & Partners")}</h2>
-        <div class="lk-logo-row">
-          <div class="lk-marquee" data-marquee="left">
-            <button class="lk-arrow lk-arrow--prev" type="button" aria-label={lang === 'ja' ? '前へ' : 'Previous'}></button>
-            <div class="lk-marquee-view">
-              {/* The set is rendered twice so the loop can wrap seamlessly; the copy is hidden from assistive tech. */}
-              <ul class="lk-marquee-track">
-                {[...logos, ...logos].map((l, i) => {
-                  const copy = i >= logos.length;
-                  return (
-                    <li aria-hidden={copy ? 'true' : undefined}>
-                      <img src={opt(l.src, true)} alt={copy ? '' : l.name} loading="lazy" decoding="async" draggable="false" />
-                    </li>
-                  );
-                })}
-              </ul>
+        {logoRows.map((row, r) => (
+          <div class="lk-logo-row">
+            <div class="lk-marquee" data-marquee={r % 2 ? 'right' : 'left'}>
+              <button class="lk-arrow lk-arrow--prev" type="button" aria-label={lang === 'ja' ? '前へ' : 'Previous'}></button>
+              <div class="lk-marquee-view">
+                {/* The set is rendered twice so the loop can wrap seamlessly; the copy is hidden from assistive tech. */}
+                <ul class="lk-marquee-track">
+                  {[...row.logos, ...row.logos].map((l, i) => {
+                    const copy = i >= row.logos.length;
+                    return (
+                      <li aria-hidden={copy ? 'true' : undefined}>
+                        <img src={opt(l.src, true)} alt={copy ? '' : l.name} loading="lazy" decoding="async" draggable="false" />
+                      </li>
+                    );
+                  })}
+                </ul>
+              </div>
+              <button class="lk-arrow lk-arrow--next" type="button" aria-label={lang === 'ja' ? '次へ' : 'Next'}></button>
             </div>
-            <button class="lk-arrow lk-arrow--next" type="button" aria-label={lang === 'ja' ? '次へ' : 'Next'}></button>
+            <a class="lk-more" href={row.href}>{row.more} <span aria-hidden="true">→</span></a>
           </div>
-          <div class="lk-more-row">
-            <a class="lk-more" href={`${href('/about-us-loka/')}#clients`}>{t('See more clients')} <span aria-hidden="true">→</span></a>
-            <a class="lk-more" href={`${href('/products/')}#our-partners`}>{t('See more partners')} <span aria-hidden="true">→</span></a>
-          </div>
-        </div>
+        ))}
       </div>
     </section>
 
@@ -698,14 +704,9 @@ const websiteSchema = {
     clip-path: none;
   }
 
-  .lk-more-row {
-    display: flex;
-    gap: 24px;
+  .lk-more {
     align-self: flex-end;
     margin: 10px 40px 0 0;
-  }
-
-  .lk-more {
     font-size: 14px;
     font-weight: 600;
     color: var(--lk-text);
@@ -731,12 +732,8 @@ const websiteSchema = {
       height: 28px;
     }
 
-    .lk-more-row {
-      margin-right: 26px;
-      gap: 16px;
-    }
-
     .lk-more {
+      margin-right: 26px;
       font-size: 13px;
     }
   }
