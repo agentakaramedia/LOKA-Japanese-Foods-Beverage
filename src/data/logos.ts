@@ -47,6 +47,10 @@ export const clients: Logo[] = [
   { file: 'tonkotsu-kazan.png', name: 'Tonkotsu Kazan Ramen' },
   { file: 'himawari.jpg', name: 'Himawari Hotel Apartments' },
   { file: 'shabu-shabu.png', name: 'Shabu Shabu & Sushi Buffet' },
+  { file: 'ebinosekai.png', name: 'Ebi no Sekai' },
+  { file: 'angkor-market.png', name: 'Angkor Market' },
+  { file: 'maxvalu.png', name: 'AEON MaxValu' },
+  { file: 'nikko.png', name: 'NIKKO Izakaya Ramen Bar' },
 ].map(({ file, ...l }) => ({ src: `/uploads/2026/10/clients/${file}`, ...l }));
 
 // Supplier logos, in the order the client supplied them. No links yet.
