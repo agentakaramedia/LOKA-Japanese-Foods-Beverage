@@ -34,7 +34,7 @@ const copy = {
 const hero = '/uploads/2026/10/products/products-header.png';
 
 // Sake and spirits brand logos, in the client mock-up's order. No links yet.
-// A third `true` marks a logo with white lettering: it keeps the checkerboard tile but skips the blend.
+// A third `true` marks a logo with white lettering: it keeps a solid tile behind it so the logo stays visible.
 const sakeBrands = [
   ['yamazaki.png', 'The Yamazaki'],
   ['hakushu.png', 'The Hakushu', true],
@@ -109,7 +109,7 @@ const sakeBrands = [
 
     <ul class="pr-wrap partners">
       {sakeBrands.map((p) => (
-        <li class:list={['partner', { 'partner--no-blend': p.whiteText }]}>
+        <li class:list={['partner', { 'partner--white-text': p.whiteText }]}>
           <img src={opt(p.src, true)} alt={p.name} loading="lazy" decoding="async" />
         </li>
       ))}
@@ -299,7 +299,7 @@ const sakeBrands = [
     text-shadow: 0 1px 6px rgba(0, 0, 0, 0.75);
   }
 
-  /* "Our Partners" logo grid: checkerboard of two lavender tints, as in the client mock-up. */
+  /* "Our Partners" / sake line-up logo grids. */
   .pr-band--partners {
     margin-top: 48px;
   }
@@ -319,17 +319,6 @@ const sakeBrands = [
     justify-content: center;
     aspect-ratio: 1;
     padding: 7%;
-    background: #eceefb;
-  }
-
-  /* Six columns: shade alternate tiles, flipping each row. */
-  .partner:nth-child(12n + 2),
-  .partner:nth-child(12n + 4),
-  .partner:nth-child(12n + 6),
-  .partner:nth-child(12n + 7),
-  .partner:nth-child(12n + 9),
-  .partner:nth-child(12n + 11) {
-    background: #d3d7f7;
   }
 
   .partner img {
@@ -368,19 +357,6 @@ const sakeBrands = [
     .partners {
       grid-template-columns: repeat(3, 1fr);
       gap: 12px;
-    }
-
-    /* An odd column count gives the checkerboard from plain odd/even. */
-    .partner:nth-child(n) {
-      background: #eceefb;
-    }
-
-    .partner:nth-child(even) {
-      background: #d3d7f7;
-    }
-
-    .partners .partner--white-text {
-      background: #8f96dd;
     }
   }
 

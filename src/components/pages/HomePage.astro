@@ -37,12 +37,10 @@ const logoRows = [
     href: `${href('/about-us-loka/')}#clients`,
   },
   {
-    // Mori Suisan's logo is white-on-transparent, invisible without a colored background behind
-    // it; swap in the black-background version for display here.
     logos: pick(partners, [
       'Nihonsakari', 'Azuma Foods', 'Toba Meat', 'TableMark', 'Kunihiro Oyster', 'Nabeshima',
       'Hamada Shuzo', 'Kaneku', 'AKJ', 'Misaki Megumi Suisan', 'Tsubaki', 'Mori Suisan',
-    ]).map((l) => (l.name === 'Mori Suisan' ? { ...l, src: '/uploads/2026/10/partners/mori-suisan-black.png' } : l)),
+    ]),
     more: t('See more partners'),
     href: `${href('/products/')}#our-partners`,
   },

@@ -2,10 +2,11 @@
  * Client and supplier logos, shared by the About page grid, the Products page grid and the
  * home page carousel.
  *
- * Tiles blend logos into their lavender background (mix-blend-mode: multiply) to drop the
- * white box behind logos supplied without transparency. `solid` marks logos that have white
- * inside the mark on a transparent surround: they skip the blend so that white stays white.
- * `whiteText` marks a logo with white lettering, which needs a deeper tile to show.
+ * Logos sit directly on a white tile (mix-blend-mode: multiply) to drop the white box behind
+ * logos supplied without transparency. `solid` marks logos that already carry their own opaque
+ * background or white-on-transparent mark: they skip the blend and render as-is. `whiteText`
+ * marks a logo with white lettering on a transparent surround, which needs a colored tile behind
+ * it to stay visible.
  */
 export interface Logo {
   src: string;
@@ -63,7 +64,7 @@ export const partners: Logo[] = [
   { file: 'hamada', name: 'Hamada Shuzo', solid: true },
   { file: 'nabeshima', name: 'Nabeshima' },
   { file: 'babi920', name: 'Babi920' },
-  { file: 'mori-suisan', name: 'Mori Suisan', whiteText: true },
+  { file: 'mori-suisan-black', name: 'Mori Suisan', solid: true },
   { file: 'tsubaki', name: 'Tsubaki', solid: true },
   { file: 'asan-service', name: 'Asan Service', solid: true },
   { file: 'yamani', name: 'Yamani' },

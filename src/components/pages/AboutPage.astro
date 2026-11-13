@@ -190,8 +190,7 @@ const t = translator(lang);
     transform: scale(1.05);
   }
 
-  /* "LOKA's Clients" logo grid: navy title bar over a checkerboard of two lavender tints,
-     as in the client mock-up. */
+  /* "LOKA's Clients" logo grid: navy title bar over a plain grid of logos. */
   .lk-clients {
     margin-top: 32px;
   }
@@ -222,21 +221,6 @@ const t = translator(lang);
     justify-content: center;
     aspect-ratio: 1;
     padding: 7%;
-    background: #eceefb;
-  }
-
-  /* Ten columns: shade alternate tiles, flipping each row. */
-  .lk-clients li:nth-child(20n + 1),
-  .lk-clients li:nth-child(20n + 3),
-  .lk-clients li:nth-child(20n + 5),
-  .lk-clients li:nth-child(20n + 7),
-  .lk-clients li:nth-child(20n + 9),
-  .lk-clients li:nth-child(20n + 12),
-  .lk-clients li:nth-child(20n + 14),
-  .lk-clients li:nth-child(20n + 16),
-  .lk-clients li:nth-child(20n + 18),
-  .lk-clients li:nth-child(20n + 20) {
-    background: #d3d7f7;
   }
 
   .lk-clients img {
@@ -265,18 +249,9 @@ const t = translator(lang);
       gap: 14px;
     }
 
-    /* An odd column count gives the checkerboard from plain odd/even. */
     .lk-clients ul {
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
-    }
-
-    .lk-clients li:nth-child(n) {
-      background: #eceefb;
-    }
-
-    .lk-clients li:nth-child(odd) {
-      background: #d3d7f7;
     }
   }
 
